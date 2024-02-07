@@ -1,0 +1,106 @@
+#bonDeLivraisonForm {
+    width: 80%;
+    margin: auto;
+}
+
+.bdl-container{
+    width: 80%;
+    min-height: 60vh;
+    margin: auto;
+    flex-direction: column;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.bdl-head {
+    border-radius: 10px;
+}
+.input-bdl-form::placeholder{
+    color: white;
+}
+
+.bdl-container > form{
+    align-items: center;
+}
+#label-mois {
+    position: initial;
+    color: white;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    font-size: medium;
+}
+
+#button-get-data{
+    margin-top: var(--spacer-3);
+}
+
+.input-bdl {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 16px;
+}
+
+.input-bdl::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: white;
+    opacity: 1; /* Firefox */
+}
+
+
+.bdl-table {
+    border-collapse: collapse;
+    width: 100%;
+    color: white;
+}
+
+.bdl-table th, .bdl-table td {
+    padding: 8px;
+    text-align: left;
+}
+
+.bdl-table th {
+    background-color: #4F74B1;
+    color: white;
+    text-align: center;
+}
+
+.bdl__table{
+    background-color: #4F74B1;
+    box-shadow: var(--shadow-regular);
+    border-radius: var(--border-3);
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 1px solid #4F74B1;
+}
+
+.bdl-table > thead{
+    border: none;
+}
+
+.button-valide-container{
+    display: flex;
+    gap: var(--spacer-3);
+}
+
+.button-valide {
+    margin-top: var(--spacer-3);
+    width: 10rem;
+}
+
+#joursTableBody input {
+    background-color: rgb(0,0,0,0);
+    box-shadow: none;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+#joursTableBody td{
+    background-color: #7d9bcd;
+    border-color: rgba(79, 116, 177, 0.50);
+    text-align: center;
+    border: 1px solid #4F74B1;
+}
+
+#joursTableBody::before {
+    content: none;
+}

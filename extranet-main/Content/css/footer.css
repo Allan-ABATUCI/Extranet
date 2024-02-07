@@ -1,0 +1,28 @@
+footer {
+    display: flex;
+    align-items: center;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    width: 100%;
+    height: 10vh;
+    font-size: var(--font-size-small);
+    margin-top: 10vh;
+}
+.nom-entreprise {
+    flex: 0.25; /* Chaque partie prendra une part égale de l'espace disponible */
+    text-align: center;
+}
+
+.nom-entreprise h1 {
+    margin: 0;
+}
+
+.info-entreprise {
+    flex: 0.25; /* Chaque partie prendra une part égale de l'espace disponible */
+    text-align: center;
+}
+
+.info-entreprise a {
+    font-size: 15px;
+    color: #fff;
+}

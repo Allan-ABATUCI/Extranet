@@ -1,0 +1,104 @@
+.add-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+}
+.form-abs {
+    width: 45%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacer-6);
+}
+.add-container > h1 {
+    text-align: center;
+    color: white;
+    font-family: 'Montserrat',sans-serif;
+}
+.add-container > h2 {
+    color: white;
+    font-family: 'Montserrat',sans-serif;
+    grid-column: 1/3;
+    margin-bottom: 2%;
+}
+.add-container > form {
+    width: 100%;
+    margin: 0;padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 3fr);
+    grid-gap: var(--spacer-6);
+}
+
+#mail-1 {
+    grid-column: 1/3;
+}
+
+#create {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+form h2{
+    color: white;
+}
+
+.form-names, .form-address, .form-infos-composante{
+    display: flex;
+    gap: var(--spacer-3);
+}
+
+.form-num-voie, .form-type-voie{
+    flex: 2;
+}
+
+.form-nom-voie{
+    flex: 6;
+}
+
+.form-cp{
+    flex: 2;
+}
+
+.form-ville{
+    flex: 8;
+}
+
+/* Media query pour les écrans de taille moyenne (iPhone 12/13 en mode portrait) */
+@media screen and (max-width: 428px) {
+    .container {
+        width: 100%;
+    }
+    h1 {
+        margin: 20% 0;
+    }
+
+    h2 {
+        width: 175%;
+        float: left;
+    }
+
+    form>h2 {
+        text-align: center;
+    }
+
+    form {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    input, textarea {
+        width: 20rem;
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 2fr);
+        grid-gap: var(--spacer-2);
+        justify-content: center;
+        margin: 20% 0;
+    }
+
+}

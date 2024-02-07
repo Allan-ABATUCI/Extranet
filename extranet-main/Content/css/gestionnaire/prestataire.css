@@ -1,0 +1,71 @@
+.liste-prestataire-contrainer{
+    display: flex;
+    flex-direction: column;
+    min-height: 60vh;
+    width: 80%;
+    gap: var(--spacer-3);
+    margin: auto;
+}
+.clients {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 10%;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.prestataire {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 10%;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.element-recherche{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5%;
+    gap: var(--spacer-2);
+}
+
+.element-block {
+    gap: var(--spacer-5);
+    display: flex;
+    flex-wrap: wrap; /* Permettre le passage à la ligne lorsque l'espace est insuffisant */
+    justify-content: space-around;
+    width: 100%;
+}
+
+.block {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: var(--width-card);
+    height: var(--height-card);
+    cursor: pointer;
+    outline: none;
+    border-radius: var(--border-2);
+    background-color: white;
+    box-shadow: var(--shadow-regular);
+    text-align: center; /* Centrer le texte à l'intérieur du bloc */
+}
+
+.block h3 {
+    color: #777777;
+    font-weight: 200;
+}
+
+.block h2 {
+    font-weight: 200;
+}
+
+.element-recherche button{
+    width: var(--width-card); !important;
+}

@@ -1,0 +1,5 @@
+.add-mission-container{
+    display: flex;
+    justify-content: end;
+    margin-top: var(--spacer-6);
+}

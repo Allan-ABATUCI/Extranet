@@ -1,0 +1,55 @@
+:root {
+    /* Colors */
+    --primary-color: #4F74B1;
+    --secondary-color: #EBEBEB;
+    --tertiary-color: #FFFFFF;
+    --delete-color: #D92727;
+    --main-background-color: rgba(56, 158, 143, 0.4);
+    --border-color: rgba(56, 158, 143, 0.2);
+
+
+    /* Font sizes */
+    --font-size--little: 0.7rem;
+    --font-size--small: 0.9rem;
+    --font-size--normal: 1rem;
+    --font-size--medium: 1.2rem;
+    --font-size--large: 1.5rem;
+    --font-size--huge: 2rem;
+
+    /* Spacers for margin, padding and gap*/
+    --spacer-1: 0.25rem;
+    --spacer-2: 0.5rem;
+    --spacer-3: 0.75rem;
+    --spacer-4: 1rem;
+    --spacer-5: 1.5rem;
+    --spacer-6: 2rem;
+    --spacer-7: 3rem;
+    --spacer-8: 5rem;
+    --spacer-10: 10rem;
+
+    /* Border */
+    --border-1: 5px;
+    --border-2: 10px;
+    --border-3: 20px;
+    --border-4: 30px;
+    --border-icon: 1px solid #494954;
+    --border-button: 2px solid var(--primary-color);
+    --border-button-delete: 2px solid #D92727;
+
+    /* Height */
+    --height-logo: 0px /* à remplir */;
+    --icon-height-small: 1.5rem;
+    --icon-height-medium: 2rem;
+    --height-thead: 5rem;
+    --height-input: 3rem;
+    --height-textarea: 20rem;
+    --height-button: 3rem;
+    --height-card: 8rem;
+
+    /* Width */
+    --width-card: 15rem;
+
+    /* Shadow */
+    --shadow-regular: 0px 3px 5px 0px rgba(0,0,0,0.25);
+    --shadow-text: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}

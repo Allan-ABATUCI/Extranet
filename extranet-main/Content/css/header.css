@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Judson&family=Montserrat&display=swap');
+
+header {
+    background: #4F74B1;
+    min-height: 10vh;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    color: white;
+    margin-bottom: 10vh;
+}
+
+.header-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+    overflow: hidden;
+    gap: var(--spacer-4);
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.menu-list{
+    gap: var(--spacer-8);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: var(--spacer-5);
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: lighter;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    font-weight: bold;
+}
+
+.header-navbar{
+    font-size: var(--font-size--small);
+    font-family: 'Montserrat', sans-serif;
+}
+
+a:hover {
+    border-bottom: 1px solid white;
+    padding-bottom: var(--spacer-1);
+}
+.logo {
+    font-size: var(--font-size--huge);
+    font-weight: lighter;
+    font-family: 'Judson', regular;
+    text-shadow: var(--shadow-text);
+}
+.right-elt {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}

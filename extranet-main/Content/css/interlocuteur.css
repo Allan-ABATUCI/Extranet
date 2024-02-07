@@ -1,0 +1,41 @@
+.form-email{
+    width: 70%;
+}
+
+.demande {
+    display: flex;
+    flex-direction: column;
+}
+
+th, td {
+
+    padding: 8px;
+    text-align: center;
+}
+
+.statut {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 10px;
+    color: #fff;
+    font: bolder;
+    padding: 3px;
+    font-size: 15px;
+
+}
+
+.vert { background-color: #4CAF50; }
+.orange { background-color: #FFA500; }
+
+#bouton-envoyer {
+    display: block;
+    margin: 0 auto; /* Pour centrer le bouton horizontalement */
+    padding: 10px 40px; /* Ajustez la taille du bouton ici */
+}
+
+#table-container {
+    max-height: 10px;  /*Hauteur fixe du conteneur */
+    overflow-y: auto;  /*Activation de la barre de défilement vertical */
+}
