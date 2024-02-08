@@ -477,7 +477,7 @@ class Model
         $req = $this->bd->prepare("INSERT INTO ACTIVITE (commentaire, id_bdl, id_personne, date_bdl) VALUES(:commentaire, :id_bdl, :id_personne, :date_bdl)");
         $req->bindValue(':commentaire', $commentaire);
         $req->bindValue(':id_bdl', $id_bdl);
-        $req->bindValue(':id_personne', $id_personne);
+        $req->bindValue(':id_personne', $id_personne, PDO::PARAM_INT);
         $req->bindValue(':date_bdl', $date_bdl);
         $req->execute();
         $req = $this->bd->prepare("INSERT INTO NB_HEURE SELECT (SELECT id_activite FROM activite ORDER BY id_activite DESC LIMIT 1), :nb_heure");
@@ -499,8 +499,8 @@ class Model
     {
         $req = $this->bd->prepare("INSERT INTO ACTIVITE (commentaire, id_bdl, id_personne, date_bdl) VALUES(:commentaire, :id_bdl, :id_personne, :date_bdl)");
         $req->bindValue(':commentaire', $commentaire);
-        $req->bindValue(':id_bdl', $id_bdl);
-        $req->bindValue(':id_personne', $id_personne);
+        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
+        $req->bindValue(':id_personne', $id_personne, PDO::PARAM_INT);
         $req->bindValue(':date_bdl', $date_bdl);
         $req->execute();
         $req = $this->bd->prepare("INSERT INTO DEMI_JOUR SELECT (SELECT id_activite FROM activite ORDER BY id_activite DESC LIMIT 1), :nb_dj");
@@ -522,8 +522,8 @@ class Model
     {
         $req = $this->bd->prepare("INSERT INTO ACTIVITE (commentaire, id_bdl, id_personne, date_bdl) VALUES(:commentaire, :id_bdl, :id_personne, :date_bdl)");
         $req->bindValue(':commentaire', $commentaire);
-        $req->bindValue(':id_bdl', $id_bdl);
-        $req->bindValue(':id_personne', $id_personne);
+        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
+        $req->bindValue(':id_personne', $id_personne, PDO::PARAM_INT);
         $req->bindValue(':date_bdl', $date_bdl);
         $req->execute();
         $req = $this->bd->prepare("INSERT INTO JOUR(id_activite, journee) SELECT (SELECT id_activite FROM activite ORDER BY id_activite DESC LIMIT 1), :nb_jour");
@@ -549,7 +549,7 @@ class Model
             $req->bindValue(':mission', $nom_mission);
             $req->bindValue(':composante', $nom_composante);
             $req->bindValue(':mois', $mois);
-            $req->bindValue(':id_prestataire', $id_prestataire);
+            $req->bindValue(':id_prestataire', $id_prestataire, PDO::PARAM_INT);
             $req->execute();
             return (bool)$req->rowCount();
         } catch (PDOException $e) {
@@ -575,7 +575,7 @@ class Model
         $req = $this->bd->prepare("INSERT INTO BON_DE_LIVRAISON(id_prestataire, id_mission, mois)  SELECT  (SELECT p.id_personne FROM PERSONNE p WHERE p.email = :email),  (SELECT m.id_mission FROM MISSION m JOIN COMPOSANTE USING(id_composante) WHERE nom_mission = :nom_mission and id_composante = :id_composante), (SELECT TO_CHAR(NOW(), 'YYYY-MM') AS date_format)");
         $req->bindValue(':email', $email, PDO::PARAM_STR);
         $req->bindValue(':nom_mission', $mission, PDO::PARAM_STR);
-        $req->bindValue(':id_composante', $id_composante);
+        $req->bindValue(':id_composante', $id_composante, PDO::PARAM_INT);
         $req->execute();
         return (bool)$req->rowCount();
     }
@@ -601,7 +601,7 @@ class Model
     {
         $req = $this->bd->prepare("INSERT INTO estDans (id_personne, id_composante) SELECT  (SELECT p.id_personne FROM PERSONNE p WHERE p.email = :email), :id_composante");
         $req->bindValue(':email', $email);
-        $req->bindValue(':id_composante', $id_composante);
+        $req->bindValue(':id_composante', $id_composante, PDO::PARAM_INT);
         $req->execute();
         return (bool)$req->rowCount();
     }
@@ -617,7 +617,7 @@ class Model
     public function getAllNbHeureActivite($id_bdl)
     {
         $req = $this->bd->prepare("SELECT nb_heure, a.commentaire, date_bdl FROM NB_HEURE JOIN ACTIVITE a USING(id_activite) JOIN BON_DE_LIVRAISON using(id_bdl) WHERE id_bdl = :id_bdl ORDER BY date_bdl");
-        $req->bindValue(':id_bdl', $id_bdl);
+        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
@@ -625,7 +625,7 @@ class Model
     public function getAllDemiJourActivite($id_bdl)
     {
         $req = $this->bd->prepare("SELECT nb_demi_journee, a.commentaire, date_bdl FROM DEMI_JOUR JOIN ACTIVITE a USING(id_activite) JOIN BON_DE_LIVRAISON using(id_bdl) WHERE id_bdl = :id_bdl ORDER BY date_bdl");
-        $req->bindValue(':id_bdl', $id_bdl);
+        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
@@ -633,7 +633,7 @@ class Model
     public function getAllJourActivite($id_bdl)
     {
         $req = $this->bd->prepare("SELECT journee, a.commentaire, date_bdl FROM JOUR JOIN ACTIVITE a USING(id_activite) JOIN BON_DE_LIVRAISON using(id_bdl) WHERE id_bdl = :id_bdl ORDER BY date_bdl");
-        $req->bindValue(':id_bdl', $id_bdl);
+        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
@@ -641,8 +641,8 @@ class Model
     public function setEstValideBdl($id_bdl, $id_interlocuteur, $valide)
     {
         $req = $this->bd->prepare("UPDATE BON_DE_LIVRAISON SET est_valide = :valide, id_interlocuteur = :id_interlocuteur WHERE id_bdl = :id_bdl");
-        $req->bindValue(':id_interlocuteur', $id_interlocuteur);
-        $req->bindValue(':id_bdl', $id_bdl);
+        $req->bindValue(':id_interlocuteur', $id_interlocuteur, PDO::PARAM_INT);
+        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
         $req->bindValue(':valide', $valide);
         $req->execute();
         return (bool)$req->rowCount();
@@ -706,7 +706,7 @@ class Model
     public function setNomComposante($id, $nom)
     {
         $req = $this->bd->prepare("UPDATE COMPOSANTE SET nom_composante = :nom WHERE id_composante = :id");
-        $req->bindValue(':id', $id);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':nom', $nom);
         $req->execute();
         return (bool)$req->rowCount();
@@ -715,7 +715,7 @@ class Model
     public function setNumeroAdresse($id, $num)
     {
         $req = $this->bd->prepare("UPDATE ADRESSE SET numero = :num WHERE id_adresse = (SELECT id_adresse FROM ADRESSE JOIN COMPOSANTE USING(id_adresse) WHERE id_composante = :id)");
-        $req->bindValue(':id', $id);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':num', $num);
         $req->execute();
         return (bool)$req->rowCount();
@@ -724,7 +724,7 @@ class Model
     public function setNomVoieAdresse($id, $nom)
     {
         $req = $this->bd->prepare("UPDATE ADRESSE SET nom_voie = :nom WHERE id_adresse = (SELECT id_adresse FROM ADRESSE JOIN COMPOSANTE USING(id_adresse) WHERE id_composante = :id)");
-        $req->bindValue(':id', $id);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':nom', $nom);
         $req->execute();
         return (bool)$req->rowCount();
@@ -734,7 +734,7 @@ class Model
     {
         $req = $this->bd->prepare("UPDATE ADRESSE SET id_localite = (SELECT id_localite FROM LOCALITE WHERE cp = :cp)
                WHERE id_adresse = (SELECT id_adresse FROM ADRESSE JOIN COMPOSANTE USING(id_adresse) WHERE id_composante = :id)");
-        $req->bindValue(':id', $id);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':cp', $cp);
         $req->execute();
         return (bool)$req->rowCount();
@@ -744,7 +744,7 @@ class Model
     {
         $req = $this->bd->prepare("UPDATE ADRESSE SET id_localite = (SELECT id_localite FROM LOCALITE WHERE LOWER(ville) = LOWER(:ville))
                WHERE id_adresse = (SELECT id_adresse FROM ADRESSE JOIN COMPOSANTE USING(id_adresse) WHERE id_composante = :id)");
-        $req->bindValue(':id', $id);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':ville', $ville);
         $req->execute();
         return (bool)$req->rowCount();
@@ -754,7 +754,7 @@ class Model
     {
         $req = $this->bd->prepare("UPDATE ADRESSE SET id_type_voie = (SELECT id_type_voie FROM TYPEVOIE WHERE LOWER(libelle) = LOWER(:libelle))
                WHERE id_adresse = (SELECT id_adresse FROM COMPOSANTE JOIN ADRESSE USING(id_adresse) WHERE id_composante = :id)");
-        $req->bindValue(':id', $id);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':libelle', $libelle);
         $req->execute();
         return (bool)$req->rowCount();
@@ -764,7 +764,7 @@ class Model
     {
         $req = $this->bd->prepare("UPDATE COMPOSANTE SET id_client = (SELECT id_client FROM CLIENT WHERE LOWER(nom_client) = LOWER(:client))
                   WHERE id_composante = :id");
-        $req->bindValue(':id', $id);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':client', $client);
         $req->execute();
         return (bool)$req->rowCount();
@@ -867,7 +867,7 @@ class Model
     public function getDashboardPrestataire($id_prestataire)
     {
         $req = $this->bd->prepare('SELECT nom_client, nom_composante, nom_mission, id_mission FROM client JOIN composante c USING(id_client) JOIN mission USING(id_composante) JOIN travailleavec ta USING(id_mission) JOIN PERSONNE p ON ta.id_personne = p.id_personne WHERE ta.id_personne=:id');
-        $req->bindValue(':id', $id_prestataire);
+        $req->bindValue(':id', $id_prestataire, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
@@ -891,7 +891,7 @@ class Model
     public function getComposantesForCommercial($id_commercial)
     {
         $req = $this->bd->prepare('SELECT id_composante AS id, nom_composante, nom_client FROM CLIENT JOIN COMPOSANTE using(id_client) JOIN estDans USING(id_composante) WHERE id_personne = :id');
-        $req->bindValue(':id', $id_commercial);
+        $req->bindValue(':id', $id_commercial, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
@@ -899,7 +899,7 @@ class Model
     public function getBdlTypeAndMonth($id_bdl)
     {
         $req = $this->bd->prepare("SELECT id_bdl, type_bdl, mois FROM BON_DE_LIVRAISON JOIN MISSION USING(id_mission) WHERE id_bdl = :id");
-        $req->bindValue(':id', $id_bdl);
+        $req->bindValue(':id', $id_bdl, PDO::PARAM_INT);
         $req->execute();
         return $req->fetch();
     }
@@ -908,8 +908,8 @@ class Model
     {
         $req = $this->bd->prepare("SELECT id_bdl, nom_mission, mois FROM BON_DE_LIVRAISON JOIN MISSION USING(id_mission) JOIN travailleavec USING(id_mission) WHERE id_mission = :id_mission and travailleavec.id_personne = :id_prestataire"
     );
-        $req->bindValue(':id_mission', $id_mission);
-        $req->bindValue(':id_prestataire', $id_prestataire);
+        $req->bindValue(':id_mission', $id_mission, PDO::PARAM_INT);
+        $req->bindValue(':id_prestataire', $id_prestataire, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -917,7 +917,7 @@ class Model
     public function getIdActivite($date_activite, $id_bdl)
     {
         $req = $this->bd->prepare('SELECT id_activite FROM activite WHERE id_bdl = :id_bdl and date_bdl = :date');
-        $req->bindValue(':id_bdl', $id_bdl);
+        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
         $req->bindValue(':date', $date_activite);
         $req->execute();
         return $req->fetch()[0];
@@ -950,7 +950,7 @@ class Model
     public function getClientContactDashboardData()
     {
         $req = $this->bd->prepare('SELECT nom_mission, date_debut, nom, prenom, id_bdl, ta.id_mission, ta.id_personne as id_prestataire FROM mission m JOIN travailleAvec ta USING(id_mission) JOIN personne p USING(id_personne) JOIN bon_de_livraison bdl ON m.id_mission= bdl.id_mission WHERE bdl.id_interlocuteur = :id;');
-        $req->bindValue(':id', $_SESSION['id']);
+        $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         return $req->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -958,7 +958,7 @@ class Model
     public function getClientForCommercial()
     {
         $req = $this->bd->prepare('SELECT DISTINCT id_client AS id, nom_client, telephone_client FROM CLIENT JOIN COMPOSANTE USING(id_client) JOIN ESTDANS USING(id_composante) WHERE id_personne = :id;');
-        $req->bindValue(':id', $_SESSION['id']);
+        $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall();
     }
@@ -971,7 +971,7 @@ class Model
     public function getComponentCommercialsEmails($idClientContact)
     {
         $req = $this->bd->prepare('SELECT email FROM dirige d JOIN estDans ed USING(id_composante) JOIN personne com ON ed.id_personne = com.id_personne WHERE d.id_personne = :id;');
-        $req->bindValue(':id', $idClientContact);
+        $req->bindValue(':id', $idClientContact, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -984,7 +984,7 @@ class Model
     function getEmailById($id)
     {
         $req = $this->bd->prepare('SELECT email FROM personne WHERE id_personne = :id;');
-        $req->bindValue(':id', $id);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->execute();
         $req->fetch(PDO::FETCH_ASSOC);
     }
@@ -1065,35 +1065,35 @@ class Model
     {
         $roles = [];
         $req = $this->bd->prepare('SELECT * FROM PRESTATAIRE WHERE id_personne = :id');
-        $req->bindValue(':id', $_SESSION['id']);
+        $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         if ($req->fetch(PDO::FETCH_ASSOC)) {
             $roles[] = 'prestataire';
         }
 
         $req = $this->bd->prepare('SELECT * FROM GESTIONNAIRE WHERE id_personne = :id');
-        $req->bindValue(':id', $_SESSION['id']);
+        $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         if ($req->fetch(PDO::FETCH_ASSOC)) {
             $roles[] = 'gestionnaire';
         }
 
         $req = $this->bd->prepare('SELECT * FROM COMMERCIAL WHERE id_personne = :id');
-        $req->bindValue(':id', $_SESSION['id']);
+        $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         if ($req->fetch(PDO::FETCH_ASSOC)) {
             $roles[] = 'commercial';
         }
 
         $req = $this->bd->prepare('SELECT * FROM INTERLOCUTEUR WHERE id_personne = :id');
-        $req->bindValue(':id', $_SESSION['id']);
+        $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         if ($req->fetch(PDO::FETCH_ASSOC)) {
             $roles[] = 'interlocuteur';
         }
 
         $req = $this->bd->prepare('SELECT * FROM ADMINISTRATEUR WHERE id_personne = :id');
-        $req->bindValue(':id', $_SESSION['id']);
+        $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         if ($req->fetch(PDO::FETCH_ASSOC)) {
             $roles[] = 'administrateur';
@@ -1175,7 +1175,7 @@ class Model
     public function checkActiviteExiste($id_bdl, $date_activite)
     {
         $req = $this->bd->prepare('SELECT EXISTS (SELECT 1 FROM ACTIVITE WHERE id_bdl = :id_bdl and date_bdl = :date_activite)');
-        $req->bindValue(':id_bdl', $id_bdl);
+        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
         $req->bindValue(':date_activite', $date_activite);
         $req->execute();
         return $req->fetch()[0] == 't';
