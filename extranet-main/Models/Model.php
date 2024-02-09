@@ -243,7 +243,7 @@ class Model
            JOIN MISSION USING(id_mission)
        WHERE id_composante = :id');
 
-        $req->bindValue(':id', $id_composante);
+        $req->bindValue(':id', $id_composante, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall();
     }
@@ -322,7 +322,7 @@ class Model
     public function assignerInterlocuteurComposanteByIdComposante($id_composante, $email)
     {
         $req = $this->bd->prepare("INSERT INTO dirige (id_personne, id_composante) SELECT  (SELECT id_personne FROM PERSONNE WHERE email=:email), :id_composante");
-        $req->bindValue(':id_composante', $id_composante);
+        $req->bindValue(':id_composante', $id_composante, PDO::PARAM_INT);
         $req->bindValue(':email', $email);
         $req->execute();
         return (bool)$req->rowCount();
@@ -341,7 +341,7 @@ class Model
                                                     (SELECT id_personne FROM PERSONNE WHERE email=:email), 
                                                     (SELECT id_composante FROM COMPOSANTE WHERE id_client = :id_client and nom_composante = :composante)");
         $req->bindValue(':composante', $composante);
-        $req->bindValue(':id_client', $id_client);
+        $req->bindValue(':id_client', $id_client, PDO::PARAM_INT);
         $req->bindValue(':email', $email);
         $req->execute();
         return (bool)$req->rowCount();
@@ -476,7 +476,7 @@ class Model
     {
         $req = $this->bd->prepare("INSERT INTO ACTIVITE (commentaire, id_bdl, id_personne, date_bdl) VALUES(:commentaire, :id_bdl, :id_personne, :date_bdl)");
         $req->bindValue(':commentaire', $commentaire);
-        $req->bindValue(':id_bdl', $id_bdl);
+        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
         $req->bindValue(':id_personne', $id_personne, PDO::PARAM_INT);
         $req->bindValue(':date_bdl', $date_bdl);
         $req->execute();
@@ -570,7 +570,7 @@ class Model
         $req = $this->bd->prepare("INSERT INTO travailleAvec (id_personne, id_mission) SELECT  (SELECT p.id_personne FROM PERSONNE p WHERE p.email = :email), (SELECT m.id_mission FROM MISSION m JOIN COMPOSANTE USING(id_composante) WHERE nom_mission = :nom_mission and id_composante = :id_composante)");
         $req->bindValue(':email', $email, PDO::PARAM_STR);
         $req->bindValue(':nom_mission', $mission, PDO::PARAM_STR);
-        $req->bindValue(':id_composante', $id_composante);
+        $req->bindValue(':id_composante', $id_composante, PDO::PARAM_INT);
         $req->execute();
         $req = $this->bd->prepare("INSERT INTO BON_DE_LIVRAISON(id_prestataire, id_mission, mois)  SELECT  (SELECT p.id_personne FROM PERSONNE p WHERE p.email = :email),  (SELECT m.id_mission FROM MISSION m JOIN COMPOSANTE USING(id_composante) WHERE nom_mission = :nom_mission and id_composante = :id_composante), (SELECT TO_CHAR(NOW(), 'YYYY-MM') AS date_format)");
         $req->bindValue(':email', $email, PDO::PARAM_STR);
@@ -819,7 +819,7 @@ class Model
     public function setDemiJournee($id, $demi_journee)
     {
         $req = $this->bd->prepare("UPDATE DEMI_JOUR SET nb_demi_journee = :dj WHERE id_activite = :id");
-        $req->bindValue(':id', $id);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':dj', $demi_journee);
         $req->execute();
         return (bool)$req->rowCount();
