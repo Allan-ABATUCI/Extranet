@@ -55,7 +55,7 @@ CREATE TABLE type_voie (
 
 CREATE TABLE commercial (
    id_commercial SERIAL PRIMARY KEY,
-   FOREIGN KEY (id_personne) REFERENCES personne(id_personne)
+   FOREIGN KEY (id_commercial) REFERENCES personne(id_personne)
 );
 
 CREATE TABLE type (
