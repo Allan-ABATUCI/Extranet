@@ -27,8 +27,6 @@ require 'view_header.php';
                     ?></h2>
                 <h3><?php
                     if (array_key_exists('id_bdl', $p)): echo $p['mois']; endif;
-                    if (array_key_exists('interne', $p)): if ($p['interne']): echo 'Interne';
-                    else: echo 'Indépendant'; endif; endif;
                     if (array_key_exists('nom_client', $p) and !array_key_exists('telephone_client', $p)): echo $p['nom_client']; endif;
                     if (array_key_exists('nom_composante', $p) and !array_key_exists('nom_client', $p)): echo $p['nom_composante']; endif;
                     if (array_key_exists('telephone_client', $p)): echo $p['telephone_client']; endif;

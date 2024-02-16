@@ -64,12 +64,22 @@ class Model
      */
     public function getDashboardGestionnaire()
     {
-        $req = $this->bd->prepare("SELECT c.nom_client, co.nom_composante, m.nom_mission, COALESCE(p.nom, 'Aucun') AS nom, COALESCE(p.prenom, 'Aucun') AS prenom, ta.id_personne as id_prestataire, ta.id_mission 
-        FROM mission m
-            JOIN composante co ON m.id_composante = co.id_composante 
-            JOIN client c ON co.id_client = c.id_client 
-            LEFT JOIN travailleavec ta ON m.id_mission = ta.id_mission 
-            LEFT JOIN personne p ON ta.id_personne = p.id_personne;");
+        $req = $this->bd->prepare("SELECT 
+        nom_client,
+        nom_composante,
+        nom,
+        prenom
+    FROM 
+        personne 
+    JOIN 
+        prestataire pr ON id_prestataire = id_personne
+    JOIN 
+        bdl b USING(id_prestataire)
+    JOIN 
+        composante USING(id_composante)
+    JOIN 
+        client USING (id_client)
+    ");
         $req->execute();
         return $req->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -1038,7 +1048,7 @@ class Model
         $realPassword = $req->fetchAll(PDO::FETCH_ASSOC);
 
         if ($realPassword) {
-            if ($realPassword[0]['mdp'] == $password) {
+            if ($realPassword[0]['mot_de_passe'] == $password) {
                 if (isset($_SESSION)) {
                     session_destroy();
                 }
@@ -1064,35 +1074,35 @@ class Model
     public function hasSeveralRoles()
     {
         $roles = [];
-        $req = $this->bd->prepare('SELECT * FROM PRESTATAIRE WHERE id_personne = :id');
+        $req = $this->bd->prepare('SELECT * FROM PRESTATAIRE WHERE id_prestataire = :id');
         $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         if ($req->fetch(PDO::FETCH_ASSOC)) {
             $roles[] = 'prestataire';
         }
 
-        $req = $this->bd->prepare('SELECT * FROM GESTIONNAIRE WHERE id_personne = :id');
+        $req = $this->bd->prepare('SELECT * FROM GESTIONNAIRE WHERE id_gestionnaire = :id');
         $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         if ($req->fetch(PDO::FETCH_ASSOC)) {
             $roles[] = 'gestionnaire';
         }
 
-        $req = $this->bd->prepare('SELECT * FROM COMMERCIAL WHERE id_personne = :id');
+        $req = $this->bd->prepare('SELECT * FROM COMMERCIAL WHERE id_commercial = :id');
         $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         if ($req->fetch(PDO::FETCH_ASSOC)) {
             $roles[] = 'commercial';
         }
 
-        $req = $this->bd->prepare('SELECT * FROM INTERLOCUTEUR WHERE id_personne = :id');
+        $req = $this->bd->prepare('SELECT * FROM INTERLOCUTEUR WHERE id_interlocuteur = :id');
         $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         if ($req->fetch(PDO::FETCH_ASSOC)) {
             $roles[] = 'interlocuteur';
         }
 
-        $req = $this->bd->prepare('SELECT * FROM ADMINISTRATEUR WHERE id_personne = :id');
+        $req = $this->bd->prepare('SELECT * FROM PERSONNE WHERE id_personne = :id AND :id=0');
         $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         if ($req->fetch(PDO::FETCH_ASSOC)) {

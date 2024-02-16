@@ -15,7 +15,7 @@ require 'view_begin.php';
                 <p class='alert'><?= $data['response'] ?></p>
             <?php endif; ?>
         <?php endif; ?>
-
+        
         <form class="login-form" action="?controller=login&action=check_pswd" method="post">
             <div>
                 <input class="input-login" type="text" name="mail" placeholder="Email">

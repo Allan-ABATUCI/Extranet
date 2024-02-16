@@ -27,7 +27,7 @@ class Controller_gestionnaire extends Controller
             $bd = Model::getModel();
             $bdlLink = '?controller=gestionnaire&action=mission_bdl';
             $buttonLink = '?controller=gestionnaire&action=ajout_mission_form';
-            $headerDashboard = ['Société', 'Composante', 'Nom Mission', 'Préstataire assigné', 'Bon de livraison'];
+            $headerDashboard = ['Société', 'Composante', 'Préstataire assigné', 'Bon de livraison'];
             $data = ['menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'buttonLink' => $buttonLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardGestionnaire()];
             return $this->render('gestionnaire_missions', $data);
         } else {
