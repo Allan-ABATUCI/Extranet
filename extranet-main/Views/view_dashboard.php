@@ -15,15 +15,15 @@
                     <?php foreach ($row as $cle => $value): ?>
                         <?php if ($cle == 'prenom' or $cle == 'nom'): ?>
                             <td><?= $row['prenom'] . ' ' . $row['nom'] ?></td>
-                            <?php break; else: ?>
-                        <?php if($cle != 'id_mission'): ?>
-                            <td><?= $value ?></td>
-                        <?php endif; endif; endforeach; ?>
-
+                            <?php break; ?>
+                        <?php endif; endforeach; ?>
+                        <?php  ?>
                     <td style="display: flex; justify-content: space-around;">
                         <div style="text-align: center;">
-                            <a href="<?= $bdlLink ?><?php if(isset($row['id_prestataire'])): echo '&id-prestataire=' . $row['id_prestataire']; endif;  ?>&id=<?= $row['id_mission'] ?>"><i class="fa fa-eye" aria-hidden="true"></i></a>
-                            <p>Consulter</p>
+                            <a href="#" onclick="setSessionData(<?= $row['id_prestataire'] ?>, <?= $row['id_composante'] ?>)">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                                Consulter
+                            </a>
                         </div>
                     </td>
                 </tr>

@@ -26,8 +26,8 @@ class Controller_prestataire extends Controller
 
         if (isset($_SESSION['id'])) {
             $bd = Model::getModel();
-            $bdlLink = '?controller=prestataire&action=mission_bdl';
-            $headerDashboard = ['Société', 'Composante', 'Nom Mission', 'Bon de livraison'];
+            $bdlLink = '?controller=prestataire&action=composante_bdl';
+            $headerDashboard = ['Société', 'Composante','annee','mois', 'Bon de livraison'];
             $data = ['menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardPrestataire($_SESSION['id'])];
             return $this->render('prestataire_missions', $data);
         } else {
@@ -54,7 +54,7 @@ class Controller_prestataire extends Controller
     public function action_get_navbar()
     {
         return [
-            ['link' => '?controller=prestataire&action=dashboard', 'name' => 'Missions'],
+            ['link' => '?controller=prestataire&action=dashboard', 'name' => 'Composante'],
             ['link' => '?controller=prestataire&action=liste_bdl', 'name' => 'Bons de livraison']];
     }
 
@@ -102,7 +102,7 @@ class Controller_prestataire extends Controller
      * Vérifie d'avoir les informations nécessaire pour renvoyer la vue liste avec les bonnes variables pour afficher la liste des bons de livraisons du prestataire en fonction de la mission
      * @return void
      */
-    public function action_mission_bdl()
+    public function action_composante_bdl()
     {
         $bd = Model::getModel();
         if (session_status() == PHP_SESSION_NONE) {

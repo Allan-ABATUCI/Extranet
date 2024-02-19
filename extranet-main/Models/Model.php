@@ -876,7 +876,7 @@ class Model
 
     public function getDashboardPrestataire($id_prestataire)
     {
-        $req = $this->bd->prepare('SELECT nom_client, nom_composante, nom_mission, id_mission FROM client JOIN composante c USING(id_client) JOIN mission USING(id_composante) JOIN travailleavec ta USING(id_mission) JOIN PERSONNE p ON ta.id_personne = p.id_personne WHERE ta.id_personne=:id');
+        $req = $this->bd->prepare('SELECT nom_client, nom_composante,id_composante FROM client JOIN composante c USING(id_client) JOIN bdl USING id_composante WHERE id_prestataire=:id');
         $req->bindValue(':id', $id_prestataire, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
