@@ -20,9 +20,9 @@
                         <?php  ?>
                     <td style="display: flex; justify-content: space-around;">
                         <div style="text-align: center;">
-                            <a href="#" onclick="setSessionData(<?= $row['id_prestataire'] ?>, <?= $row['id_composante'] ?>)">
+                        <a href="?controller=<?=$_SESSION['role']?>&action=liste_bdl" id="sendDataLink">
                                 <i class="fa fa-eye" aria-hidden="true"></i>
-                                Consulter
+                                <p>Consulter</p>
                             </a>
                         </div>
                     </td>
@@ -31,3 +31,4 @@
         </tbody>
     </table>
 </div>
+<script src="Content\js\prestataire.js"></script>

@@ -17,10 +17,9 @@ require 'view_header.php';
 
     <div class="element-block">
         <?php foreach ($person as $p): ?>
-            <a href='<?= $cardLink ?>&id=<?php if (isset($p['id_bdl'])): echo $p['id_bdl']; else: echo $p['id']; endif; ?>'
+            <a href='<?= $cardLink ?>&id=<?php if (isset($p['annee']) && isset($p['annee'])): echo $p['id_bdl']; else: echo $p['id']; endif; ?>'
                class="block">
                 <h2><?php
-                    if (array_key_exists('id_bdl', $p)): echo $p['nom_mission']; endif;
                     if (array_key_exists('nom', $p)): echo $p['nom'] . ' ' . $p['prenom']; endif;
                     if (array_key_exists('nom_client', $p) and array_key_exists('telephone_client', $p)): echo $p['nom_client']; endif;
                     if (array_key_exists('nom_composante', $p) and array_key_exists('nom_client', $p)): echo $p['nom_composante']; endif;

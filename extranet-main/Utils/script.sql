@@ -163,3 +163,34 @@ CREATE TABLE affecte (
    FOREIGN KEY (id_composante) REFERENCES composante(id_composante),
    FOREIGN KEY (id_commercial) REFERENCES commercial(id_commercial)
 );
+
+-- FONCTIONS
+CREATE OR REPLACE FUNCTION insert_into_represente_function()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO represente (id_interlocuteur, id_composante)
+    VALUES (NEW.id_interlocuteur, NEW.id_composante);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION insert_into_affecte_from_commercial()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO affecte (id_composante, id_commercial)
+    VALUES (NEW.id_composante, NEW.id_commercial);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+-- TRIGGERS
+CREATE TRIGGER insert_into_represente
+AFTER INSERT ON composante
+FOR EACH ROW
+EXECUTE FUNCTION insert_into_represente_function();
+
+CREATE TRIGGER insert_into_affecte_commercial
+AFTER INSERT ON commercial
+FOR EACH ROW
+EXECUTE FUNCTION insert_into_affecte_from_commercial();

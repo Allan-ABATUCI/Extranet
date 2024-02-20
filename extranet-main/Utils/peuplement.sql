@@ -60,3 +60,14 @@ INSERT INTO gestionnaire (id_gestionnaire) VALUES
 (1),
 (2),
 (3);
+
+INSERT INTO interlocuteur (id_interlocuteur) VALUES
+(1),
+(2),
+(3);
+
+INSERT INTO bdl (id_composante, id_gestionnaire, annee, mois, signature_interlocuteur, signature_prestataire, commentaire, id_prestataire, id_interlocuteur)
+VALUES 
+(1, 1, 2023, 1, 'John Doe', 'ABC Inc.', 'This is a comment.', 1, 1),
+(2, 2, 2023, 2, 'Jane Smith', 'XYZ Corp.', 'Another comment.', 2, 2),
+(3, 3, 2023, 3, 'Bob Johnson', '123 Company', 'Yet another comment.', 3,3);

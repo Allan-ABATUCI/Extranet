@@ -11,9 +11,11 @@
         <?php endif; ?>
         <ul>
             <li>
-                <a class='right-elt' href="?controller=<?= $_GET['controller'] ?>&action=infos" id="username" class='right-elt'><i class="fa fa-user-circle"
-                                                                                 aria-hidden="true"></i><?php if (isset($_SESSION)): ; echo '&nbsp;' . $_SESSION['nom']; endif; ?>
-                    <br> <?php if (isset($_SESSION)): echo '&nbsp;' . $_SESSION['prenom']; endif; ?></a>
+                <a class='right-elt' href="?controller=<?= $_GET['controller'] ?>&action=infos" id="username" class='right-elt'>
+                    <i class="fa fa-user-circle" aria-hidden="true"></i>
+                    <?php if (isset($_SESSION)): ; echo '&nbsp;' . $_SESSION['nom']; endif; ?>
+                    <br> <?php if (isset($_SESSION)): echo '&nbsp;' . $_SESSION['prenom']; endif; ?>
+                </a>
                     <?php echo $_SESSION['role']?></li>
             <li><a href="?controller=login" class='right-elt'><i class="fa fa-sign-out"
                                                                              aria-hidden="true"></i></a></li>
