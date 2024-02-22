@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         // URL of the page to which data will be sent
-        const url = 'receiver_page.php';
+        const url = 'bdl_mission.php';
 
         // Send the AJAX request
         fetch(url, requestOptions)

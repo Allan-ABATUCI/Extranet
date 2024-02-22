@@ -43,7 +43,7 @@ CREATE TABLE client (
 );
 
 CREATE TABLE localite (
-   id_localite SERIAL PRIMARY KEY,
+   id_localite SERIAL PRIMARY KEY,     
    cp VARCHAR(5) NOT NULL,
    ville VARCHAR(50) NOT NULL
 );
@@ -164,7 +164,8 @@ CREATE TABLE affecte (
    FOREIGN KEY (id_commercial) REFERENCES commercial(id_commercial)
 );
 
--- FONCTIONS
+      
+-- Création de la fonction insert_into_represente_function
 CREATE OR REPLACE FUNCTION insert_into_represente_function()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -174,6 +175,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Création de la fonction insert_into_affecte_from_commercial
 CREATE OR REPLACE FUNCTION insert_into_affecte_from_commercial()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -183,14 +185,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+--créer les triggers après avoir fait le peuplement   
 
--- TRIGGERS
-CREATE TRIGGER insert_into_represente
-AFTER INSERT ON composante
-FOR EACH ROW
-EXECUTE FUNCTION insert_into_represente_function();
+-- -- Création du déclencheur (trigger) insert_into_represente
+-- CREATE TRIGGER insert_into_represente
+-- AFTER INSERT ON composante
+-- FOR EACH ROW
+-- EXECUTE FUNCTION insert_into_represente_function();
 
-CREATE TRIGGER insert_into_affecte_commercial
-AFTER INSERT ON commercial
-FOR EACH ROW
-EXECUTE FUNCTION insert_into_affecte_from_commercial();
+-- -- Création du déclencheur (trigger) insert_into_affecte_commercial
+-- CREATE TRIGGER insert_into_affecte_commercial
+-- AFTER INSERT ON commercial
+-- FOR EACH ROW
+-- EXECUTE FUNCTION insert_into_affecte_from_commercial();
+

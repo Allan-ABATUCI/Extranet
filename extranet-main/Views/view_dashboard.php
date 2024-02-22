@@ -20,7 +20,7 @@
                         <?php  ?>
                     <td style="display: flex; justify-content: space-around;">
                         <div style="text-align: center;">
-                        <a href="?controller=<?=$_SESSION['role']?>&action=liste_bdl" id="sendDataLink">
+                        <a href="?controller=<?=$_SESSION['role']?>&action=liste_bdl" id="<?=$row['id_composante']?>">
                                 <i class="fa fa-eye" aria-hidden="true"></i>
                                 <p>Consulter</p>
                             </a>
