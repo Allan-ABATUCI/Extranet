@@ -987,7 +987,7 @@ class Model
      */
     public function getComponentCommercialsEmails($idClientContact)
     {
-        $req = $this->bd->prepare('SELECT email FROM dirige d JOIN estDans ed USING(id_composante) JOIN personne com ON ed.id_personne = com.id_personne WHERE d.id_personne = :id;');
+        $req = $this->bd->prepare('SELECT email FROM represente JOIN personne USING(id_interlocuteur) WHERE id_interlocuteur = :id');
         $req->bindValue(':id', $idClientContact, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchAll(PDO::FETCH_ASSOC);

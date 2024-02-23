@@ -29,7 +29,7 @@ class Controller_gestionnaire extends Controller
             $buttonLink = '?controller=gestionnaire&action=ajout_mission_form';
             $headerDashboard = ['Société', 'Composante', 'Préstataire assigné', 'Bon de livraison'];
             $data = ['menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'buttonLink' => $buttonLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardGestionnaire()];
-            return $this->render('gestionnaire_missions', $data);
+            $this->render('gestionnaire_missions', $data);
         } else {
             echo 'Une erreur est survenue lors du chargement du tableau de bord';
         }

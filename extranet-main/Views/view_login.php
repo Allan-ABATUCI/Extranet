@@ -18,7 +18,7 @@ require 'view_begin.php';
         
         <form class="login-form" action="?controller=login&action=check_pswd" method="post">
             <div>
-                <input class="input-login" type="text" name="mail" placeholder="Email">
+                <input class="input-login" type="text" name="email" placeholder="Email">
                 <a class="oublie" href="#">Adresse email oubliée ?</a>
             </div>
             <div>

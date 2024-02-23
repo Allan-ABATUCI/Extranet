@@ -29,7 +29,7 @@ class Controller_prestataire extends Controller
             $bdlLink = '?controller=prestataire&action=composante_bdl';
             $headerDashboard = ['Société', 'Composante','annee','mois', 'Bon de livraison'];
             $data = ['menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardPrestataire($_SESSION['id'])];
-            return $this->render('prestataire_missions', $data);
+            $this->render('prestataire_missions', $data);
         } else {
             echo 'Une erreur est survenue lors du chargement du tableau de bord';
         }
@@ -58,19 +58,7 @@ class Controller_prestataire extends Controller
             ['link' => '?controller=prestataire&action=liste_bdl', 'name' => 'Bons de livraison']];
     }
 
-    /**
-     * Ajoute dans la base de données la date à laquelle le prestataire est absent
-     * @return void
-     */
-    public function action_prestataire_creer_absences()
-    {
-        $bd = Model::getModel();
-        if (isset($_POST['prenom']) && isset($_POST['nom']) && isset($_POST['email']) && isset($_POST['Date']) && isset($_POST['motif'])) {
-            $bd->addAbsenceForPrestataire($_POST['prenom'], $_POST['nom'], $_POST['email'], $_POST['Date'], $_POST['motif']);
-        } else {
-            $this->action_error("données incomplètes");
-        }
-    }
+
 
     /**
      * Renvoie la vue qui lui permet de remplir son bon de livraion avec le bon type
@@ -138,18 +126,7 @@ class Controller_prestataire extends Controller
      * Vérifie d'avoir les informations nécessaires pour créer un bon de livraison
      * @return void
      */
-    public function action_prestataire_creer_bdl()
-    {
-        $bd = Model::getModel();
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-        if (isset($_SESSION['id']) && isset($_POST['mission'])) {
-            $bd->addBdlForPrestataire($_SESSION['id'], e($_POST['mission']));
-        } else {
-            echo 'Une erreur est survenue lors de la création du bon de livraison';
-        }
-    }
+
 
     /**
      * Récupère le tableau renvoyé par le JavaScript et rempli les lignes du bon de livraison en fonction de son type

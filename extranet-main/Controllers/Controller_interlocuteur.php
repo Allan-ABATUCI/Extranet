@@ -24,7 +24,7 @@ class Controller_interlocuteur extends Controller
             $bdlLink = '?controller=interlocuteur&action=mission_bdl';
             $headerDashboard = ['Nom projet/société', 'Date', 'Préstataire assigné', 'Bon de livraison'];
             $data = ['header' => $headerDashboard, 'menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'dashboard' => $bd->getClientContactDashboardData()];
-            return $this->render('interlocuteur', $data);
+            $this->render('interlocuteur', $data);
         } else {
             echo 'Une erreur est survenue lors du chargement du tableau de bord';
         }

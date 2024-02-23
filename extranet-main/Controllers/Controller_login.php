@@ -23,18 +23,27 @@ class Controller_login extends Controller
     public function action_check_pswd()
     {
         $db = Model::getModel();
-        if (isset($_POST['mail']) && isset($_POST['password'])) {
-            if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $_POST['mail'])) {
+
+        // Sanitize the $_POST values.
+        $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+        $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+
+        // Check if values are set.
+        if (isset($email) && isset($password)) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $msg = "Ce n'est pas un email correcte !";
             } else {
                 $msg = "L'identifiant ou le mot de passe est incorrect !";
 
-                if ($db->checkMailPassword(e($_POST['mail']), e($_POST['password']))) {
+                if ($db->checkMailPassword($email, $password)) {
                     $role = $db->hasSeveralRoles();
                     if (isset($role['roles'])) {
                         $msg = $role;
                     } else {
+                        // Use output buffering to avoid header modification warning.
+                        ob_start();
                         header("Location: index.php?controller=$role&action=default");
+                        ob_end_flush();
                         return;
                     }
                 }
@@ -45,7 +54,6 @@ class Controller_login extends Controller
         }
     }
 
-
     /**
      * Cette fonction va être appelée eu fur et à mesure que l'utilisateur tape son email afin de lui indiquer si son email existe
      * Elle vérifie si l'email existe dans la base de donnée, renvoie true si oui, false sinon
@@ -55,8 +63,8 @@ class Controller_login extends Controller
     {
         $mailExisting = false;
 
-        if (isset($_POST['mail'])) {
-            $mail = e($_POST['mail']);
+        if (isset($_POST['email'])) {
+            $mail = e($_POST['email']);
             //à chiffrer
             $bd = Model::getModel();
             $mailExisting = $bd->mailExists($mail);
