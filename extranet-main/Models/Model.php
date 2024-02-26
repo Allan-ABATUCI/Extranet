@@ -618,7 +618,7 @@ class Model
 
     public function getAllBdlPrestataire($id_pr)
     {
-        $req = $this->bd->prepare("SELECT  anne,mois, nom_composante FROM bdl JOIN prestataire ON id_prestataire =:id");
+        $req = $this->bd->prepare("SELECT annee,mois, nom_composante FROM bdl JOIN prestataire ON id_prestataire =:id");
         $req->bindValue(':id', $id_pr, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall();
