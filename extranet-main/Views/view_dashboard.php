@@ -1,4 +1,10 @@
-<!-- Vue permettant de consulter son dashboard comportant les missions, prestataire assigné, composante et consulter son bon de livraison -->
+<style>
+  .dashboard-link {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+  }
+</style>
 
 <div class='dashboard__table'>
     <table>
@@ -12,15 +18,14 @@
         <tbody>
             <?php foreach ($dashboard as $row): ?>
                 <tr>
-                    <?php foreach ($row as $cle => $value): ?>
-                        <?php if ($cle == 'prenom' or $cle == 'nom'): ?>
-                            <td><?= $row['prenom'] . ' ' . $row['nom'] ?></td>
-                            <?php break; ?>
-                        <?php endif; endforeach; ?>
-                        <?php  ?>
-                    <td style="display: flex; justify-content: space-around;">
-                        <div style="text-align: center;">
-                        <a href="?controller=<?=$_SESSION['role']?>&action=liste_bdl" id="<?=$row['id_composante']?>">
+                    <?php foreach ($row as $key => $value): ?>
+                        <?php if (! preg_match("/^id/",$key)):?>
+                            <td><?= "{$value}" ?></td>
+                        <?php endif?>
+                    <?php endforeach; ?>
+                    <td class="dashboard-link">
+                        <div>
+                            <a href=<?= "?controller={$_SESSION['role']}&action=liste_bdl&id={$row['id_composante']}"?>>
                                 <i class="fa fa-eye" aria-hidden="true"></i>
                                 <p>Consulter</p>
                             </a>
@@ -31,4 +36,3 @@
         </tbody>
     </table>
 </div>
-<script src="Content\js\prestataire.js"></script>

@@ -878,16 +878,6 @@ class Model
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getDashboardPrestataire($id_prestataire)
-    {
-        $req = $this->bd->prepare('SELECT nom_client, nom_composante,id_composante 
-        FROM client 
-        JOIN composante USING(id_client) 
-        JOIN bdl USING (id_composante) WHERE id_prestataire=:id');
-        $req->bindValue(':id', $id_prestataire, PDO::PARAM_INT);
-        $req->execute();
-        return $req->fetchall(PDO::FETCH_ASSOC);
-    }
 
     public function getInterlocuteurForCommercial($id_co)
     {
@@ -921,15 +911,6 @@ class Model
         return $req->fetch();
     }
 
-    public function getBdlsOfPrestataireByIdMission($id_mission, $id_prestataire)
-    {
-        $req = $this->bd->prepare("SELECT id_bdl, nom_mission, mois FROM BON_DE_LIVRAISON JOIN MISSION USING(id_mission) JOIN travailleavec USING(id_mission) WHERE id_mission = :id_mission and travailleavec.id_personne = :id_prestataire"
-    );
-        $req->bindValue(':id_mission', $id_mission, PDO::PARAM_INT);
-        $req->bindValue(':id_prestataire', $id_prestataire, PDO::PARAM_INT);
-        $req->execute();
-        return $req->fetchAll(PDO::FETCH_ASSOC);
-    }
 
     public function getIdActivite($date_activite, $id_bdl)
     {
@@ -1045,6 +1026,32 @@ class Model
         $req->execute();
         return $req->fetchall();
     }
+    public function getDashboardPrestataire($id_prestataire)
+    {
+        $req = $this->bd->prepare('SELECT nom_client, nom_composante,id_composante 
+        FROM client 
+        JOIN composante USING(id_client) 
+        JOIN bdl USING (id_composante) WHERE id_prestataire=:id');
+        $req->bindValue(':id', $id_prestataire, PDO::PARAM_INT);
+        $req->execute();
+        return $req->fetchall(PDO::FETCH_ASSOC);
+    }
+
+    public function getBdlsOfPrestataireByIdMission($id_composante, $id_prestataire)
+    {
+        $req = $this->bd->prepare("SELECT annee, mois, nom_composante, mois FROM
+        composante JOIN
+        bdl USING(id_composante) JOIN
+        prestataire USING(id_prestataire) 
+        WHERE id_composante = :id_comosante 
+        and id_prestataire = :id_prestataire"
+    );
+        $req->bindValue(':id_composante', $id_composante, PDO::PARAM_INT);
+        $req->bindValue(':id_prestataire', $id_prestataire, PDO::PARAM_INT);
+        $req->execute();
+        return $req->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 
     /* -------------------------------------------------------------------------
                             AUTRE

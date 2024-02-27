@@ -27,14 +27,23 @@ class Controller_prestataire extends Controller
         if (isset($_SESSION['id'])) {
             $bd = Model::getModel();
             $bdlLink = '?controller=prestataire&action=composante_bdl';
-            $headerDashboard = ['Société', 'Composante','annee','mois', 'Bon de livraison'];
-            $data = ['menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardPrestataire($_SESSION['id'])];
-            return $this->render('prestataire_missions', $data);
+            $headerDashboard = ['Société', 'Composante', 'Bon de livraison'];
+            $data = ['title' => "Mes composantes", 'menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardPrestataire($_SESSION['id'])];
+            $this->render('tableau', $data);
         } else {
             echo 'Une erreur est survenue lors du chargement du tableau de bord';
         }
     }
 
+    public function liste_bdl()
+    {
+        $bd = Model::getModel();
+        $data = [
+            'title' => 'Bon de livraison de la composante ',
+            'dashboard' => $bd->getBdlsOfPrestataireByIdMission(e($_GET['id']), $_SESSION['id'])
+        ];
+        $this->render('tableau', $data);
+    }
     /**
      * Renvoie la vue qui montre les informations de l'utilisateur connecté
      * @return void
@@ -55,7 +64,8 @@ class Controller_prestataire extends Controller
     {
         return [
             ['link' => '?controller=prestataire&action=dashboard', 'name' => 'Composante'],
-            ['link' => '?controller=prestataire&action=liste_bdl', 'name' => 'Bons de livraison']];
+            ['link' => '?controller=prestataire&action=liste_bdl', 'name' => 'Bons de livraison']
+        ];
     }
 
     /**
@@ -172,22 +182,22 @@ class Controller_prestataire extends Controller
                 if ($bd->checkActiviteExiste($_GET['id'], $row[0])) {
                     $id_activite = $bd->getIdActivite($row[0], $_GET['id']);
                     if ($row[1] && $_GET['type'] == 'Heure') {
-                        $bd->setNbHeure($id_activite, (int)$row[1]);
+                        $bd->setNbHeure($id_activite, (int) $row[1]);
                     } elseif ($row[1] >= 0 && $row[1] <= 1 && $_GET['type'] == 'Journée') {
-                        $bd->setJourneeJour($id_activite, (int)$row[1]);
+                        $bd->setJourneeJour($id_activite, (int) $row[1]);
                     } elseif ($row[1] >= 0 && $row[1] <= 2 && $_GET['type'] == 'Demi-journée') {
-                        $bd->setDemiJournee($id_activite, (int)$row[1]);
+                        $bd->setDemiJournee($id_activite, (int) $row[1]);
                     }
                     if ($row[2]) {
                         $bd->setCommentaireActivite($id_activite, $row[2]);
                     }
                 } elseif ($row[1]) {
                     if ($row[1] && $_GET['type'] == 'Heure') {
-                        $bd->addNbHeureActivite($row[2], $_GET['id'], $_SESSION['id'], $row[0], (int)$row[1]);
+                        $bd->addNbHeureActivite($row[2], $_GET['id'], $_SESSION['id'], $row[0], (int) $row[1]);
                     } elseif ($row[1] >= 0 && $row[1] <= 1 && $_GET['type'] == 'Journée') {
-                        $bd->addJourneeJour($row[2], $_GET['id'], $_SESSION['id'], $row[0], (int)$row[1]);
+                        $bd->addJourneeJour($row[2], $_GET['id'], $_SESSION['id'], $row[0], (int) $row[1]);
                     } elseif ($row[1] >= 0 && $row[1] <= 2 && $_GET['type'] == 'Demi-journée') {
-                        $bd->addDemiJournee($row[2], $_GET['id'], $_SESSION['id'], $row[0], (int)$row[1]);
+                        $bd->addDemiJournee($row[2], $_GET['id'], $_SESSION['id'], $row[0], (int) $row[1]);
                     }
                 }
             }

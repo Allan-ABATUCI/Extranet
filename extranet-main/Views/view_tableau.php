@@ -6,7 +6,9 @@ require 'view_header.php';
 
 <div class='main-contrainer'>
     <div class="dashboard-container">
-        <h1>Mes Composantes</h1>
+        <h1>
+            <?= $title ?>
+        </h1>
         <?php require_once 'view_dashboard.php'; ?>
     </div>
 </div>
