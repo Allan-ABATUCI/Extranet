@@ -50,7 +50,7 @@ class Model
         $req->bindValue(':email', $email);
         $req->bindValue(':mdp', $mdp);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
 
     }
 
@@ -320,7 +320,7 @@ class Model
         $req->bindValue(':nom_client', $client, PDO::PARAM_STR);
         $req->bindValue(':email', $email, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -335,7 +335,7 @@ class Model
         $req->bindValue(':id_composante', $id_composante, PDO::PARAM_INT);
         $req->bindValue(':email', $email);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -354,7 +354,7 @@ class Model
         $req->bindValue(':id_client', $id_client, PDO::PARAM_INT);
         $req->bindValue(':email', $email);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /* -------------------------------------------------------------------------
@@ -370,7 +370,7 @@ class Model
         $req = $this->bd->prepare("INSERT INTO PRESTATAIRE (id_personne) SELECT id_personne FROM personne WHERE email = :email");
         $req->bindValue(':email', $email, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -383,7 +383,7 @@ class Model
         $req = $this->bd->prepare("INSERT INTO INTERLOCUTEUR (id_personne) SELECT id_personne FROM personne WHERE email = :email");
         $req->bindValue(':email', $email);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -396,7 +396,7 @@ class Model
         $req = $this->bd->prepare("INSERT INTO COMMERCIAL (id_personne) SELECT id_personne FROM personne WHERE email = :email");
         $req->bindValue(':email', $email, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -409,7 +409,7 @@ class Model
         $req = $this->bd->prepare("INSERT INTO GESTIONNAIRE (id_personne) SELECT id_personne FROM personne WHERE email = :email");
         $req->bindValue(':email', $email, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -424,7 +424,7 @@ class Model
         $req->bindValue(':nom_client', $client, PDO::PARAM_STR);
         $req->bindValue(':tel', $tel, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -449,7 +449,7 @@ class Model
         $req->bindValue(':nom_client', $nom_client, PDO::PARAM_STR);
         $req->bindValue(':nom_compo', $nom_compo, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -470,7 +470,7 @@ class Model
         $req->bindValue(':nom_composante', $nom_compo);
         $req->bindValue(':nom_client', $nom_client);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -493,7 +493,7 @@ class Model
         $req = $this->bd->prepare("INSERT INTO NB_HEURE SELECT (SELECT id_activite FROM activite ORDER BY id_activite DESC LIMIT 1), :nb_heure");
         $req->bindValue(':nb_heure', $nb_heure);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -516,7 +516,7 @@ class Model
         $req = $this->bd->prepare("INSERT INTO DEMI_JOUR SELECT (SELECT id_activite FROM activite ORDER BY id_activite DESC LIMIT 1), :nb_dj");
         $req->bindValue(':nb_dj', $nb_dj);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -539,7 +539,7 @@ class Model
         $req = $this->bd->prepare("INSERT INTO JOUR(id_activite, journee) SELECT (SELECT id_activite FROM activite ORDER BY id_activite DESC LIMIT 1), :nb_jour");
         $req->bindValue(':nb_jour', $nb_jour);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -561,7 +561,7 @@ class Model
             $req->bindValue(':mois', $mois);
             $req->bindValue(':id_prestataire', $id_prestataire, PDO::PARAM_INT);
             $req->execute();
-            return (bool)$req->rowCount();
+            return (bool) $req->rowCount();
         } catch (PDOException $e) {
             error_log('Erreur PHP : ' . $e->getMessage());
             echo 'Une des informations est mauvaise';
@@ -587,7 +587,7 @@ class Model
         $req->bindValue(':nom_mission', $mission, PDO::PARAM_STR);
         $req->bindValue(':id_composante', $id_composante, PDO::PARAM_INT);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /**
@@ -604,7 +604,7 @@ class Model
         $req->bindValue(':composante', $composante);
         $req->bindValue(':client', $client);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function assignerCommercialByIdComposante($email, $id_composante)
@@ -613,7 +613,7 @@ class Model
         $req->bindValue(':email', $email);
         $req->bindValue(':id_composante', $id_composante, PDO::PARAM_INT);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function getAllBdlPrestataire($id_pr)
@@ -655,7 +655,7 @@ class Model
         $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
         $req->bindValue(':valide', $valide);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
 
     }
 
@@ -665,7 +665,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':nom', $nom, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setPrenomPersonne($id, $prenom)
@@ -674,7 +674,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':prenom', $prenom, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setEmailPersonne($id, $email)
@@ -683,7 +683,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':email', $email, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setMdpPersonne($id, $mdp)
@@ -692,7 +692,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':mdp', $mdp, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setNomClient($id, $nom)
@@ -701,7 +701,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':nom', $nom, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setTelClient($id, $tel)
@@ -710,7 +710,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':tel', $tel, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setNomComposante($id, $nom)
@@ -719,7 +719,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':nom', $nom);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setNumeroAdresse($id, $num)
@@ -728,7 +728,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':num', $num);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setNomVoieAdresse($id, $nom)
@@ -737,7 +737,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':nom', $nom);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setCpLocalite($id, $cp)
@@ -747,7 +747,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':cp', $cp);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setVilleLocalite($id, $ville)
@@ -757,7 +757,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':ville', $ville);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setLibelleTypevoie($id, $libelle)
@@ -767,7 +767,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':libelle', $libelle);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setClientComposante($id, $client)
@@ -777,7 +777,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':client', $client);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setCommentaireActivite($id, $commentaire)
@@ -786,7 +786,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':commentaire', $commentaire, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setDateBdlActivite($id, $date)
@@ -795,7 +795,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':date', $date, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
 
@@ -805,7 +805,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':heure', $heure, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setDebutHeurePlageHoraire($id, $heure)
@@ -814,7 +814,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':heure', $heure, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setFinHeurePlageHoraire($id, $heure)
@@ -823,7 +823,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':heure', $heure, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setDemiJournee($id, $demi_journee)
@@ -832,7 +832,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':dj', $demi_journee);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setJourneeJour($id, $jour)
@@ -841,7 +841,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':jour', $jour, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setDebutHeureSuppJour($id, $debut)
@@ -850,7 +850,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':debut', $debut, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     public function setFinHeureSuppJour($id, $fin)
@@ -859,7 +859,7 @@ class Model
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':fin', $fin, PDO::PARAM_STR);
         $req->execute();
-        return (bool)$req->rowCount();
+        return (bool) $req->rowCount();
     }
 
     /* -------------------------------------------------------------------------
@@ -1039,13 +1039,13 @@ class Model
 
     public function getBdlsOfPrestataireByIdMission($id_composante, $id_prestataire)
     {
-        $req = $this->bd->prepare("SELECT annee, mois, nom_composante, mois FROM
-        composante JOIN
+        $req = $this->bd->prepare("SELECT annee, mois, nom_composante, mois 
+        FROM composante JOIN
         bdl USING(id_composante) JOIN
         prestataire USING(id_prestataire) 
-        WHERE id_composante = :id_comosante 
+        WHERE id_composante = :id_composante 
         and id_prestataire = :id_prestataire"
-    );
+        );
         $req->bindValue(':id_composante', $id_composante, PDO::PARAM_INT);
         $req->bindValue(':id_prestataire', $id_prestataire, PDO::PARAM_INT);
         $req->execute();

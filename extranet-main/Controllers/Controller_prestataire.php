@@ -28,22 +28,19 @@ class Controller_prestataire extends Controller
             $bd = Model::getModel();
             $bdlLink = '?controller=prestataire&action=composante_bdl';
             $headerDashboard = ['Société', 'Composante', 'Bon de livraison'];
-            $data = ['title' => "Mes composantes", 'menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardPrestataire($_SESSION['id'])];
+            $data = [
+                'title' => "Mes composantes",
+                'menu' => $this->action_get_navbar(),
+                'bdlLink' => $bdlLink,
+                'header' => $headerDashboard,
+                'dashboard' => $bd->getDashboardPrestataire($_SESSION['id'])
+            ];
             $this->render('tableau', $data);
         } else {
             echo 'Une erreur est survenue lors du chargement du tableau de bord';
         }
     }
 
-    public function liste_bdl()
-    {
-        $bd = Model::getModel();
-        $data = [
-            'title' => 'Bon de livraison de la composante ',
-            'dashboard' => $bd->getBdlsOfPrestataireByIdMission(e($_GET['id']), $_SESSION['id'])
-        ];
-        $this->render('tableau', $data);
-    }
     /**
      * Renvoie la vue qui montre les informations de l'utilisateur connecté
      * @return void
@@ -121,9 +118,15 @@ class Controller_prestataire extends Controller
         if (isset($_GET['id'])) {
             $buttonLink = '?controller=prestataire&action=ajout_bdl_form';
             $cardLink = '?controller=prestataire&action=afficher_bdl';
-            $data = ['title' => 'Bons de livraison', 'buttonLink' => $buttonLink, 'cardLink' => $cardLink, 'menu' => $this->action_get_navbar(), 'person' => $bd->getBdlsOfPrestataireByIdMission($_GET['id'], $_SESSION['id'])];
-            $this->render('liste', $data);
+            $data = [
+                'title' => 'Bon de livraison de la composante' . $_GET['nom'],
+                'buttonLink' => $buttonLink,
+                'cardLink' => $cardLink,
+                'menu' => $this->action_get_navbar(),
+                'person' => $bd->getBdlsOfPrestataireByIdMission($_GET['id'], $_SESSION['id'])
+            ];
         }
+        $this->render('liste', $data);
     }
 
     /**
@@ -139,7 +142,13 @@ class Controller_prestataire extends Controller
         if (isset($_SESSION['id'])) {
             $cardLink = '?controller=prestataire&action=afficher_bdl';
             $buttonLink = '?controller=prestataire&action=ajout_bdl_form';
-            $data = ['title' => 'Mes Bons de livraison', 'buttonLink' => $buttonLink, 'cardLink' => $cardLink, 'menu' => $this->action_get_navbar(), "person" => $bd->getAllBdlPrestataire($_SESSION['id'])];
+            $data = [
+                'title' => 'Mes Bons de livraison',
+                'buttonLink' => $buttonLink,
+                'cardLink' => $cardLink,
+                'menu' => $this->action_get_navbar(),
+                "person" => $bd->getAllBdlPrestataire($_SESSION['id'])
+            ];
             $this->render("liste", $data);
         }
     }

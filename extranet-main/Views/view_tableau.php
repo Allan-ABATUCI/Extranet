@@ -9,6 +9,7 @@ require 'view_header.php';
         <h1>
             <?= $title ?>
         </h1>
+
         <?php require_once 'view_dashboard.php'; ?>
     </div>
 </div>

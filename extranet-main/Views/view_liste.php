@@ -4,31 +4,53 @@ require 'view_begin.php';
 require 'view_header.php';
 ?>
 <div class='liste-prestataire-contrainer'>
-    <h1><?= $title ?> </h1>
+    <h1>
+        <?= $title ?>
+    </h1>
     <div class="element-recherche">
         <input type="text" id="recherche" name="recherche" placeholder="Rechercher un <?= $title ?>...">
-        <?php if (((str_contains($_GET['controller'], 'gestionnaire') || str_contains($_GET['controller'], 'administrateur')) && !isset($_GET['id']))
-            || ((str_contains($_GET['controller'], 'prestataire') && isset($person[0]['id_bdl'])))): ?>
-            <button type="submit" class="button-primary"
-                    onclick="window.location='<?= $buttonLink ?>'">Ajouter
+        <?php if (
+            ((str_contains($_GET['controller'], 'gestionnaire') || str_contains($_GET['controller'], 'administrateur')) && !isset($_GET['id']))
+            || ((str_contains($_GET['controller'], 'prestataire') && isset($person[0]['id_bdl'])))
+        ): ?>
+            <button type="submit" class="button-primary" onclick="window.location='<?= $buttonLink ?>'">Ajouter
             </button>
         <?php endif; ?>
     </div>
 
     <div class="element-block">
         <?php foreach ($person as $p): ?>
-            <a href='<?= $cardLink ?>&id=<?php if (isset($p['annee']) && isset($p['annee'])): echo $p['id_bdl']; else: echo $p['id']; endif; ?>'
-               class="block">
-                <h2><?php
-                    if (array_key_exists('nom', $p)): echo $p['nom'] . ' ' . $p['prenom']; endif;
-                    if (array_key_exists('nom_client', $p) and array_key_exists('tel_client', $p)): echo $p['nom_client']; endif;
-                    ?></h2>
-                <h3><?php
-                    if (array_key_exists('mois', $p)): echo $p['annee'].''. $p['mois']; endif;
-                    if (array_key_exists('nom_client', $p) and !array_key_exists('tel_client', $p)): echo $p['nom_client']; endif;
-                    if (array_key_exists('nom_composante', $p) and !array_key_exists('nom_client', $p)): echo $p['nom_composante']; endif;
-                    if (array_key_exists('tel_client', $p)): echo $p['tel_client']; endif;
-                    ?></h3>
+            <a href='<?= $cardLink ?>&id=<?php if (isset($p['annee']) && isset($p['annee'])):
+                  echo $p['id_bdl'];
+              else:
+                  echo $p['id'];
+              endif; ?>' class="block">
+                <h2>
+                    <?php
+                    if (array_key_exists('nom', $p)):
+                        echo $p['nom'] . ' ' . $p['prenom'];
+                    endif;
+                    if (array_key_exists('nom_client', $p) and array_key_exists('tel_client', $p)):
+                        echo $p['nom_client'];
+                    endif;
+                    if (array_key_exists('nom_composante', $p) and !array_key_exists('nom_client', $p)):
+                        echo $p['nom_composante'];
+                    endif;
+                    ?>
+                </h2>
+                <h3>
+                    <?php
+                    if (array_key_exists('mois', $p)):
+                        echo $p['annee'] . ' - ' . $p['mois'];
+                    endif;
+                    if (array_key_exists('nom_client', $p) and !array_key_exists('tel_client', $p)):
+                        echo $p['nom_client'];
+                    endif;
+                    if (array_key_exists('tel_client', $p)):
+                        echo $p['tel_client'];
+                    endif;
+                    ?>
+                </h3>
             </a>
         <?php endforeach; ?>
     </div>
