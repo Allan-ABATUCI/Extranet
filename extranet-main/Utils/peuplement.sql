@@ -61,5 +61,4 @@ VALUES
 (2, 2, 2023, 2, 'Jane Smith', 'XYZ Corp.', 'Another comment.', 2, 2),
 (3, 3, 2023, 3, 'Bob Johnson', '123 Company', 'Yet another comment.', 3, 3);
 
--- Les autres INSERT INTO restent inchangés
--- Veuillez les ajouter après ces lignes
+

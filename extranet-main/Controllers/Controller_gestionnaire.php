@@ -28,7 +28,7 @@ class Controller_gestionnaire extends Controller
             $bdlLink = '?controller=gestionnaire&action=mission_bdl';
             $buttonLink = '?controller=gestionnaire&action=ajout_mission_form';
             $headerDashboard = ['Société', 'Composante', 'Préstataire assigné', 'Bon de livraison'];
-            $data = ['menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'buttonLink' => $buttonLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardGestionnaire()];
+            $data = ['title'=>,'menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'buttonLink' => $buttonLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardGestionnaire()];
             $this->render('tableau', $data);
         } else {
             echo 'Une erreur est survenue lors du chargement du tableau de bord';

@@ -77,6 +77,7 @@ a:hover {
   left: -200px;
   transition: left 0.3s ease;
   width: 180px;
+  height: 140px;;
   padding: 10px;
   background-color: #f1f1f1;
 }
@@ -92,4 +93,10 @@ height:40px;
 box-shadow: none;
 left:var(--spacer-5);
 padding: 0px;
+}
+.sticky{
+    position:sticky;
+}
+.role{
+    color:white;
 }
