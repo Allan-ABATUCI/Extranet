@@ -33,6 +33,7 @@ class Controller_login extends Controller
                     $role = $db->hasSeveralRoles();
                     if (isset($role['roles'])) {
                         $msg = $role;
+                        $_SESSION['roles'] = $role['roles'];
                     } else {
                         header("Location: index.php?controller=$role&action=default");
                         return;

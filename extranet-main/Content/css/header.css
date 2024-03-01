@@ -65,19 +65,31 @@ a:hover {
     margin-top: 6.1%;
 }
 .header-role{
-    position: absolute;
-    left:35%;
-    bottom:0%;
-    font-size: small;
+    position: relative;
+    font-size: small;   
 }
 .header-exit{
     position:relative;
-    right:-6.4rem;
     margin-top:-2.5rem;
 }
-.header-infos{
-    font-size: 130%;
-    position: relative ;
-    right: -17rem;
+#sliding-menu {
+  position: absolute;
+  left: -200px;
+  transition: left 0.3s ease;
+  width: 180px;
+  padding: 10px;
+  background-color: #f1f1f1;
 }
 
+#sliding-menu.show {
+  left: 0;
+}
+
+#menu-button {
+position: relative;
+width:120px;
+height:40px;
+box-shadow: none;
+left:var(--spacer-5);
+padding: 0px;
+}

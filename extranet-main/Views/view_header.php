@@ -11,8 +11,7 @@
         <?php endif; ?>
         <ul class="header-infos">
             <li>
-                <a class='right-elt' href="?controller=<?= $_GET['controller'] ?>&action=infos" id="username"
-                    class='right-elt'>
+                <a class='right-elt' href="?controller=<?= $_GET['controller'] ?>&action=infos" id="username">
                     <i class="fa fa-user-circle" aria-hidden="true"></i>
                     <?php if (isset($_SESSION)):
                         ;
@@ -20,9 +19,18 @@
                         echo '&nbsp;' . $_SESSION['prenom'] . '</p>';
                     endif; ?>
                 </a>
-                <span class="header-role">
+                <button id="menu-button">
                     <?php echo $_SESSION['role'] ?>
-                </span>
+                </button>
+
+                <nav id="sliding-menu">
+                    <ul>
+                        <?php foreach ($_SESSION['roles'] as $r): ?>
+                            <li><a href="?controller=<?= $r ?>&action=default"></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </nav>
+
             </li>
         </ul>
         <ul class="header-exit">
@@ -30,3 +38,4 @@
         </ul>
     </nav>
 </header>
+<script src="Content/js/prestataire.js "></script>
