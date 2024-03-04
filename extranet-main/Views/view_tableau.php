@@ -12,7 +12,7 @@ require 'view_header.php';
 
         <?php require_once 'view_dashboard.php'; ?>
         <?php if ($_GET['controller'] == 'gestionnaire' || $_GET['controller'] == 'interlocuteur' || $_GET['controller'] == 'administrateur') {
-            echo '            <div class="add-mission-container"><button type="button" class="button-primary" onclick="window.location=' . $buttonLink . '">+ Créer
+            echo '<div class="add-mission-container"><button type="button" class="button-primary" onclick="window.location=' . $buttonLink . '">+ Créer
                 Mission</button></div>';
         } ?>
     </div>

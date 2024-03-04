@@ -2,9 +2,9 @@
 <header>
     <nav class="header-navbar">
         <div class="logo">Perform Vision</div>
-        <?php if (isset($menu)) : ?>
+        <?php if (isset($menu)): ?>
             <ul class="menu-list">
-                <?php foreach ($menu as $m) : ?>
+                <?php foreach ($menu as $m): ?>
                     <li><a href=<?= $m['link'] ?>><?= $m['name'] ?></li></a>
                 <?php endforeach; ?>
             </ul>
@@ -13,20 +13,32 @@
             <li>
                 <a class='right-elt' href="?controller=<?= $_GET['controller'] ?>&action=infos" id="username">
                     <i class="fa fa-user-circle" aria-hidden="true"></i>
-                    <?php if (isset($_SESSION)) :;
+                    <?php if (isset($_SESSION)):
+                        ;
                         echo '&nbsp;' . '<p>' . $_SESSION['nom'];
                         echo '&nbsp;' . $_SESSION['prenom'] . '</p>';
                     endif; ?>
                 </a>
-                <img src="Content/images/role-management.svg" class="fa role">
+
                 <button id="menu-button">
-                    <?php echo $_SESSION['role'] ?>
+                    <img src="<?= $rolemanagment ?>" class="fa role">
+                    <span>
+                        <?php echo $_SESSION['role'] ?>
+                    </span>
                 </button>
 
                 <nav id="sliding-menu">
                     <ul>
-                        <?php foreach ($_SESSION['roles'] as $r) : ?>
-                            <li><a href="?controller=<?= $r ?>&action=default"></a></li>
+                        <?php foreach ($_SESSION['roles'] as $r): ?>
+                            <div>
+                                <li><a href="?controller=<?= $r ?>&action=default">
+
+                                        <?= $r ?>
+
+                                    </a></li>
+                            </div>
+
+
                         <?php endforeach; ?>
                     </ul>
                 </nav>

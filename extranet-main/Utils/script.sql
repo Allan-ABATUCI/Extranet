@@ -185,17 +185,22 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
---créer les triggers après avoir fait le peuplement   
+/*
+Creating triggers after population
+*/
 
--- -- Création du déclencheur (trigger) insert_into_represente
--- CREATE TRIGGER insert_into_represente
--- AFTER INSERT ON composante
--- FOR EACH ROW
--- EXECUTE FUNCTION insert_into_represente_function();
+/* 
+Creation of the 'insert_into_represente' trigger
+*/
+CREATE TRIGGER insert_into_represente
+AFTER INSERT ON composante
+FOR EACH ROW
+EXECUTE FUNCTION insert_into_represente_function();
 
--- -- Création du déclencheur (trigger) insert_into_affecte_commercial
--- CREATE TRIGGER insert_into_affecte_commercial
--- AFTER INSERT ON commercial
--- FOR EACH ROW
--- EXECUTE FUNCTION insert_into_affecte_from_commercial();
-
+/* 
+Creation of the 'insert_into_affecte_commercial' trigger
+*/
+CREATE TRIGGER insert_into_affecte_commercial
+AFTER INSERT ON commercial
+FOR EACH ROW
+EXECUTE FUNCTION insert_into_affecte_from_commercial();

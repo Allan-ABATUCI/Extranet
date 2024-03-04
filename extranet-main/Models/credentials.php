@@ -1,4 +1,4 @@
 <?php
-$dsn='pgsql:host=localhost;dbname=extranet';
-$login='Allan';
-$mdp='laflemme';
+$dsn = 'pgsql:host=localhost;dbname=allanabatuci';
+$login = 'allanabatuci';
+$mdp = 'laflemme';

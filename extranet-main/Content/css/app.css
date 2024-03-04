@@ -15,7 +15,7 @@ body {
 }
 
 img {
-    width: var(--icon-height-small);
+    width: var(--icon-height-medium);
 }
 
 .main-contrainer{

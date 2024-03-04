@@ -20,12 +20,10 @@ class Controller_commercial extends Controller
         if (isset($_SESSION['id'])) {
             $bd = Model::getModel();
             $bdlLink = '?controller=commercial&action=mission_bdl';
-            $headerDashboard = ['Société', 'Composante','Nom Mission' ,'Préstataire assigné', 'Bon de livraison'];
-            $data = ['menu'=>$this->action_get_navbar(), 'bdlLink' => $bdlLink, 'header' => $headerDashboard, 'dashboard' => $bd->getdashboardCommercial($_SESSION['id'])];
-            return $this->render('prestataire_missions', $data);
-        } 
-        else 
-        {
+            $headerDashboard = ['Société', 'Composante', 'Nom Mission', 'Préstataire assigné', 'Bon de livraison'];
+            $data = ['title' => 'Mes composantes', 'menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'header' => $headerDashboard, 'dashboard' => $bd->getdashboardCommercial($_SESSION['id'])];
+            $this->render('tableau', $data);
+        } else {
             echo 'Une erreur est survenue lors du chargement du tableau de bord';
         }
     }
@@ -41,19 +39,20 @@ class Controller_commercial extends Controller
             ['link' => '?controller=commercial&action=composantes', 'name' => 'Composantes'],
             ['link' => '?controller=commercial&action=clients', 'name' => 'Clients'],
             ['link' => '?controller=commercial&action=prestataires', 'name' => 'Prestataires'],
-            ];
+        ];
     }
 
     /**
      * Vérifie d'avoir les informations nécessaire pour renvoyer la vue liste avec les bonnes variables pour afficher la liste des bons de livraisons d'un prestataire en fonction de la mission
      * @return void
      */
-    public function action_mission_bdl(){
+    public function action_mission_bdl()
+    {
         $bd = Model::getModel();
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if(isset($_GET['id']) && isset($_GET['id-prestataire'])){
+        if (isset($_GET['id']) && isset($_GET['id-prestataire'])) {
             $cardLink = '?controller=commercial&action=consulter_bdl';
             $data = ['title' => 'Bons de livraison', 'cardLink' => $cardLink, 'menu' => $this->action_get_navbar(), 'person' => $bd->getBdlsOfPrestataireByIdMission(e($_GET['id']), e($_GET['id-prestataire']))];
             $this->render('liste', $data);
@@ -105,20 +104,21 @@ class Controller_commercial extends Controller
      * Vérifie qu'il existe dans l'url l'id qui fait référence au bon de livraison et renvoie la vue qui permet de consulter le bon de livraison
      * @return void
      */
-    public function action_consulter_bdl(){
+    public function action_consulter_bdl()
+    {
         $bd = Model::getModel();
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
         if (isset($_GET['id'])) {
             $typeBdl = $bd->getBdlTypeAndMonth(e($_GET['id']));
-            if($typeBdl['type_bdl'] == 'Heure'){
+            if ($typeBdl['type_bdl'] == 'Heure') {
                 $activites = $bd->getAllNbHeureActivite(e($_GET['id']));
             }
-            if($typeBdl['type_bdl'] == 'Demi-journée'){
+            if ($typeBdl['type_bdl'] == 'Demi-journée') {
                 $activites = $bd->getAllDemiJourActivite(e($_GET['id']));
             }
-            if($typeBdl['type_bdl'] == 'Journée'){
+            if ($typeBdl['type_bdl'] == 'Journée') {
                 $activites = $bd->getAllJourActivite(e($_GET['id']));
             }
 
@@ -160,7 +160,7 @@ class Controller_commercial extends Controller
         }
         if (isset($_SESSION['id'])) {
             $bd = Model::getModel();
-            
+
             $title = 'Composantes';
             $cardLink = '?controller=commercial&action=infos_composante';
             $data = ['title' => $title, 'person' => $bd->getComposantesForCommercial($_SESSION['id']), 'cardLink' => $cardLink, 'menu' => $this->action_get_navbar()];
@@ -172,17 +172,16 @@ class Controller_commercial extends Controller
      * Renvoie la liste des interlocuteurs des composantes assignées au commercial connecté
      * @return void
      */
-    public function action_commercial_interlocuteurs(){
+    public function action_commercial_interlocuteurs()
+    {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_SESSION['id'])){
+        if (isset($_SESSION['id'])) {
             $bd = Model::getModel();
-            $data=[$bd->getInterlocuteurForCommercial($_SESSION['id'])];
-            $this->render("liste",$data);
-        }
-        else 
-        {
+            $data = [$bd->getInterlocuteurForCommercial($_SESSION['id'])];
+            $this->render("liste", $data);
+        } else {
             echo 'Une erreur est survenue lors du chargement des clients.';
         }
     }
@@ -192,19 +191,18 @@ class Controller_commercial extends Controller
      * La vérification de l'identifiant de Session permet de s'assurer que la personne est connectée en faisant partie de la base de données
      * @return void
      */
-    public function action_prestataires(){
+    public function action_prestataires()
+    {
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_SESSION['id'])){
+        if (isset($_SESSION['id'])) {
             $bd = Model::getModel();
-            
+
             $cardLink = "?controller=commercial&action=infos_personne";
             $data = ['title' => 'Prestataires', 'cardLink' => $cardLink, "person" => $bd->getPrestataireForCommercial($_SESSION['id']), 'menu' => $this->action_get_navbar()];
             $this->render("liste", $data);
-        }
-        else 
-        {
+        } else {
             echo 'Une erreur est survenue lors du chargement des prestataire.';
         }
     }
@@ -290,10 +288,12 @@ class Controller_commercial extends Controller
             $infos = $bd->getInfosSociete(e($_GET['id']));
             $composantes = $bd->getComposantesSociete(e($_GET['id']));
             $interlocuteurs = $bd->getInterlocuteursSociete(e($_GET['id']));
-            $data = ['infos' => $infos,
+            $data = [
+                'infos' => $infos,
                 'composantes' => $composantes,
                 'interlocuteurs' => $interlocuteurs,
-                'menu' => $this->action_get_navbar()];
+                'menu' => $this->action_get_navbar()
+            ];
             $this->render('infos_client', $data);
         }
     }
@@ -330,12 +330,14 @@ class Controller_commercial extends Controller
             $commerciaux = $bd->getCommerciauxComposante(e($_GET['id']));
             $interlocuteurs = $bd->getInterlocuteursComposante(e($_GET['id']));
             $bdl = $bd->getBdlComposante(e($_GET['id']));
-            $data = ['infos' => $infos,
+            $data = [
+                'infos' => $infos,
                 'prestataires' => $prestataires,
                 'commerciaux' => $commerciaux,
                 'interlocuteurs' => $interlocuteurs,
                 'bdl' => $bdl,
-                'menu' => $this->action_get_navbar()];
+                'menu' => $this->action_get_navbar()
+            ];
             $this->render('infos_composante', $data);
         }
     }

@@ -88,15 +88,22 @@ a:hover {
 
 #menu-button {
 position: relative;
-width:120px;
+width:160px;
 height:40px;
 box-shadow: none;
-left:var(--spacer-5);
 padding: 0px;
 }
 .sticky{
     position:sticky;
 }
 .role{
-    color:white;
+    position:relative;
+    left:-0.2rem;
+}
+#menu-button span{
+    bottom:0.5rem;
+    position:relative;
+}
+.block{
+    display:block;
 }
