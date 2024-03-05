@@ -51,7 +51,6 @@ class Model
         $req->bindValue(':mdp', $mdp);
         $req->execute();
         return (bool) $req->rowCount();
-
     }
 
     /* -------------------------------------------------------------------------
@@ -656,7 +655,6 @@ class Model
         $req->bindValue(':valide', $valide);
         $req->execute();
         return (bool) $req->rowCount();
-
     }
 
     public function setNomPersonne($id, $nom)
@@ -947,7 +945,11 @@ class Model
      */
     public function getClientContactDashboardData()
     {
-        $req = $this->bd->prepare('SELECT nom_mission, date_debut, nom, prenom, id_bdl, ta.id_mission, ta.id_personne as id_prestataire FROM mission m JOIN travailleAvec ta USING(id_mission) JOIN personne p USING(id_personne) JOIN bon_de_livraison bdl ON m.id_mission= bdl.id_mission WHERE bdl.id_interlocuteur = :id;');
+        $req = $this->bd->prepare('SELECT DISTINCT p.nom, p.prenom, p.email, p.telephone
+FROM personne AS p
+INNER JOIN prestataire AS pr ON p.id_personne = pr.id_prestataire
+INNER JOIN represente AS r ON pr.id_prestataire = r.id_composante
+INNER JOIN interlocuteur AS i ON r.id_interlocuteur = :id');
         $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -968,7 +970,13 @@ class Model
      */
     public function getComponentCommercialsEmails($idClientContact)
     {
-        $req = $this->bd->prepare('SELECT email FROM dirige d JOIN estDans ed USING(id_composante) JOIN personne com ON ed.id_personne = com.id_personne WHERE d.id_personne = :id;');
+        $req = $this->bd->prepare('SELECT distinct p.email
+FROM personne AS p
+INNER JOIN commercial AS c ON p.id_personne = c.id_commercial
+INNER JOIN affecte AS a ON c.id_commercial = a.id_commercial
+INNER JOIN composante AS comp ON a.id_composante = comp.id_composante
+INNER JOIN represente AS r ON comp.id_composante = r.id_composante
+INNER JOIN interlocuteur AS i ON r.id_interlocuteur = :id');
         $req->bindValue(':id', $idClientContact, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchAll(PDO::FETCH_ASSOC);
@@ -1039,7 +1047,8 @@ class Model
 
     public function getBdlsOfPrestataireByIdMission($id_composante, $id_prestataire)
     {
-        $req = $this->bd->prepare("SELECT annee, mois, nom_composante, mois 
+        $req = $this->bd->prepare(
+            "SELECT annee, mois, nom_composante, mois 
         FROM composante JOIN
         bdl USING(id_composante) JOIN
         prestataire USING(id_prestataire) 
