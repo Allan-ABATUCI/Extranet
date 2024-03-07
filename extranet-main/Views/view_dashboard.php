@@ -21,9 +21,13 @@
             <?php foreach ($dashboard as $row): ?>
                 <tr>
                     <?php foreach ($row as $key => $value): ?>
-                        <?php if (!preg_match("/^id/", $key)): ?>
+                        <?php if (!preg_match("/^id/", $key) && $key != "prenom"): ?>
                             <td>
-                                <?= "{$value}" ?>
+                                <?php if ($key == "nom"): ?>
+                                    <?= $value . " " . $row['prenom'] ?>
+                                <?php else: ?>
+                                    <?= "{$value}" ?>
+                                <?php endif ?>
                             </td>
                         <?php endif ?>
                     <?php endforeach; ?>

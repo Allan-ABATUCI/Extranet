@@ -90,8 +90,8 @@ class Controller_prestataire extends Controller
             session_start();
         }
         if (isset($_GET['id'])) {
-            $typeBdl = $bd->getBdlTypeAndMonth($_GET['id']);
-            if ($typeBdl['type_bdl'] == 'Heure') {
+            $typeBdl = $bd->getbdltype($_GET['annee'], $_GET['mois']);
+            if (array_key_exists('numero', $typeBdl)) {
                 $infosBdl = $bd->getAllNbHeureActivite($_GET['id']);
             } elseif ($typeBdl['type_bdl'] == 'Journée') {
                 $infosBdl = $bd->getAllJourActivite($_GET['id']);

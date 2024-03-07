@@ -20,11 +20,12 @@ class Controller_interlocuteur extends Controller
             session_start();
         }
         if (isset($_SESSION['id'])) {
+            $_SESSION['role'] = 'interlocuteur';
             $bd = Model::getModel();
             $bdlLink = '?controller=interlocuteur&action=mission_bdl';
-            $headerDashboard = ['Nom projet/société', 'Date', 'Préstataire assigné', 'Bon de livraison'];
+            $headerDashboard = ['Préstataire assigné', 'e-mail', 'téléphone', 'Bon de livraison'];
             $data = ['header' => $headerDashboard, 'menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'dashboard' => $bd->getClientContactDashboardData()];
-            return $this->render('interlocuteur', $data);
+            $this->render('interlocuteur', $data);
         } else {
             echo 'Une erreur est survenue lors du chargement du tableau de bord';
         }
@@ -62,12 +63,13 @@ class Controller_interlocuteur extends Controller
      * Met à jour les informations de l'utilisateur connecté
      * @return void
      */
-    public function action_mission_bdl(){
+    public function action_mission_bdl()
+    {
         $bd = Model::getModel();
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if(isset($_GET['id']) && isset($_GET['id-prestataire'])){
+        if (isset($_GET['id']) && isset($_GET['id-prestataire'])) {
             $cardLink = '?controller=interlocuteur&action=consulter_bdl';
             $data = ['title' => 'Bons de livraison', 'menu' => $this->action_get_navbar(), 'cardLink' => $cardLink, 'person' => $bd->getBdlsOfPrestataireByIdMission(e($_GET['id']), e($_GET['id-prestataire']))];
             $this->render('liste', $data);
@@ -78,20 +80,21 @@ class Controller_interlocuteur extends Controller
      * Vérifie qu'il existe dans l'url l'id qui fait référence au bon de livraison et renvoie la vue qui permet de consulter le bon de livraison
      * @return void
      */
-    public function action_consulter_bdl(){
+    public function action_consulter_bdl()
+    {
         $bd = Model::getModel();
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
         if (isset($_GET['id'])) {
             $typeBdl = $bd->getBdlTypeAndMonth($_GET['id']);
-            if($typeBdl['type_bdl'] == 'Heure'){
+            if ($typeBdl['type_bdl'] == 'Heure') {
                 $activites = $bd->getAllNbHeureActivite($_GET['id']);
             }
-            if($typeBdl['type_bdl'] == 'Demi-journée'){
+            if ($typeBdl['type_bdl'] == 'Demi-journée') {
                 $activites = $bd->getAllDemiJourActivite($_GET['id']);
             }
-            if($typeBdl['type_bdl'] == 'Journée'){
+            if ($typeBdl['type_bdl'] == 'Journée') {
                 $activites = $bd->getAllJourActivite($_GET['id']);
             }
 
@@ -106,16 +109,16 @@ class Controller_interlocuteur extends Controller
      * Met à jour la colonne valide de la table BON_DE_LIVRAISON pour indiquer que le bon de livraison est validé
      * @return void
      */
-    public function action_valider_bdl(){
+    public function action_valider_bdl()
+    {
         $bd = Model::getModel();
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if(isset($_GET['id']) && isset($_GET['valide'])){
+        if (isset($_GET['id']) && isset($_GET['valide'])) {
             $bd->setEstValideBdl(e($_GET['id']), $_SESSION['id'], e($_GET['valide']));
             $this->action_consulter_bdl();
-        }
-        else {
+        } else {
             echo 'Une erreur est survenue lors de la validation de ce bon de livraison';
         }
     }

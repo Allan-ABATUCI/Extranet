@@ -20,10 +20,10 @@ require 'view_header.php';
 
     <div class="element-block">
         <?php foreach ($person as $p): ?>
-            <a href='<?= $cardLink ?>&id=<?php if (isset($p['annee']) && isset($p['annee'])):
-                  echo $p['id_bdl'];
+            <a href='<?= $cardLink ?><?php if (isset($p['mois']) || isset($p['annee'])):
+                  echo '&annee=' . $p['annee'] . '&mois=' . $p['mois'];
               else:
-                  echo $p['id'];
+                  echo '&id=' . $p['id'];
               endif; ?>' class="block">
                 <h2>
                     <?php

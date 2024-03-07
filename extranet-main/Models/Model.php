@@ -887,7 +887,14 @@ class Model
 
     public function getPrestataireForCommercial($id_co)
     {
-        $req = $this->bd->prepare('SELECT DISTINCT nom, prenom, ta.id_personne as id FROM client JOIN composante USING(id_client) JOIN mission USING(id_composante) JOIN travailleavec ta USING(id_mission) JOIN PERSONNE p ON ta.id_personne = p.id_personne WHERE ed.id_personne = :id');
+        $req = $this->bd->prepare('SELECT p.nom, p.prenom 
+        FROM personne as p
+        INNER JOIN prestataire as ps ON p.id_personne = ps.id_prestataire
+        INNER JOIN bdl ON ps.id_prestataire = bdl.id_prestataire
+        INNER JOIN composante ON bdl.id_composante = composante.id_composante
+        WHERE bdl.id_composante IN (
+            SELECT affecte.id_composante FROM affecte WHERE affecte.id_commercial = :id
+        );');
         $req->bindValue(':id', $id_co, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall();
@@ -901,22 +908,14 @@ class Model
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getBdlTypeAndMonth($id_bdl)
-    {
-        $req = $this->bd->prepare("SELECT id_bdl, type_bdl, mois FROM BON_DE_LIVRAISON JOIN MISSION USING(id_mission) WHERE id_bdl = :id");
-        $req->bindValue(':id', $id_bdl, PDO::PARAM_INT);
-        $req->execute();
-        return $req->fetch();
-    }
 
-
-    public function getIdActivite($date_activite, $id_bdl)
+    public function getbdltype($annee, $mois)
     {
-        $req = $this->bd->prepare('SELECT id_activite FROM activite WHERE id_bdl = :id_bdl and date_bdl = :date');
-        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
-        $req->bindValue(':date', $date_activite);
+        $req = $this->bd->prepare('SELECT * FROM periode JOIN bdl ON annee=:annee AND mois=:mois WHERE jour_du_mois = 0');
+        $req->bindValue(':annee', $annee, PDO::PARAM_INT);
+        $req->bindValue(':mois', $mois, PDO::PARAM_INT);
         $req->execute();
-        return $req->fetch()[0];
+        return $req->fetch(PDO::FETCH_ASSOC);
     }
 
     /* -------------------------------------------------------------------------
@@ -957,7 +956,7 @@ INNER JOIN interlocuteur AS i ON r.id_interlocuteur = :id');
 
     public function getClientForCommercial()
     {
-        $req = $this->bd->prepare('SELECT DISTINCT id_client AS id, nom_client, telephone_client FROM CLIENT JOIN COMPOSANTE USING(id_client) JOIN ESTDANS USING(id_composante) WHERE id_personne = :id;');
+        $req = $this->bd->prepare('SELECT DISTINCT id_client as id , nom_client, tel_client FROM CLIENT JOIN COMPOSANTE USING(id_client) JOIN AFFECTE USING(id_composante) WHERE id_commercial = :id');
         $req->bindValue(':id', $_SESSION['id'], PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall();
