@@ -67,7 +67,9 @@ class Model
         nom_client,
         nom_composante,
         nom,
-        prenom
+        prenom,
+        id_composante,
+        id_prestataire
     FROM 
         personne 
     JOIN 
@@ -346,7 +348,7 @@ class Model
      */
     public function assignerInterlocuteurComposanteByIdClient($id_client, $email, $composante)
     {
-        $req = $this->bd->prepare("INSERT INTO dirige (id_personne, id_composante) SELECT  
+        $req = $this->bd->prepare("INSERT INTO represente (id_interlocuteur, id_composante) SELECT  
                                                     (SELECT id_personne FROM PERSONNE WHERE email=:email), 
                                                     (SELECT id_composante FROM COMPOSANTE WHERE id_client = :id_client and nom_composante = :composante)");
         $req->bindValue(':composante', $composante);
@@ -366,7 +368,7 @@ class Model
      */
     public function addPrestataire($email)
     {
-        $req = $this->bd->prepare("INSERT INTO PRESTATAIRE (id_personne) SELECT id_personne FROM personne WHERE email = :email");
+        $req = $this->bd->prepare("INSERT INTO PRESTATAIRE (id_prestataire) SELECT id_personne FROM personne WHERE email = :email");
         $req->bindValue(':email', $email, PDO::PARAM_STR);
         $req->execute();
         return (bool) $req->rowCount();
@@ -379,7 +381,7 @@ class Model
      */
     public function addInterlocuteur($email)
     {
-        $req = $this->bd->prepare("INSERT INTO INTERLOCUTEUR (id_personne) SELECT id_personne FROM personne WHERE email = :email");
+        $req = $this->bd->prepare("INSERT INTO INTERLOCUTEUR (id_interlocuteur) SELECT id_personne FROM personne WHERE email = :email");
         $req->bindValue(':email', $email);
         $req->execute();
         return (bool) $req->rowCount();
@@ -392,7 +394,7 @@ class Model
      */
     public function addCommercial($email)
     {
-        $req = $this->bd->prepare("INSERT INTO COMMERCIAL (id_personne) SELECT id_personne FROM personne WHERE email = :email");
+        $req = $this->bd->prepare("INSERT INTO COMMERCIAL (id_commercial) SELECT id_personne FROM personne WHERE email = :email");
         $req->bindValue(':email', $email, PDO::PARAM_STR);
         $req->execute();
         return (bool) $req->rowCount();
@@ -405,7 +407,7 @@ class Model
      */
     public function addGestionnaire($email)
     {
-        $req = $this->bd->prepare("INSERT INTO GESTIONNAIRE (id_personne) SELECT id_personne FROM personne WHERE email = :email");
+        $req = $this->bd->prepare("INSERT INTO GESTIONNAIRE (id_gestionnaire) SELECT id_personne FROM personne WHERE email = :email");
         $req->bindValue(':email', $email, PDO::PARAM_STR);
         $req->execute();
         return (bool) $req->rowCount();
@@ -428,7 +430,7 @@ class Model
 
     /**
      * Méthode permettant d'ajouter une composante en ajoutant les informations de son adresse dans la table adresse puis les informations de la composante dans la table composante
-     * @param $libelleVoie
+     * @param $libelleVoie                                                                                                  
      * @param $cp
      * @param $numVoie
      * @param $nomVoie
@@ -622,11 +624,12 @@ class Model
         $req->execute();
         return $req->fetchall();
     }
-
-    public function getAllNbHeureActivite($id_bdl)
+    //pour créneau
+    public function getAllNbHeureActivite($annee, $mois)
     {
-        $req = $this->bd->prepare("SELECT nb_heure, a.commentaire, date_bdl FROM NB_HEURE JOIN ACTIVITE a USING(id_activite) JOIN BON_DE_LIVRAISON using(id_bdl) WHERE id_bdl = :id_bdl ORDER BY date_bdl");
-        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
+        $req = $this->bd->prepare("SELECT heure_arrivee,heure_départ, joursDuMois FROM periode JOIN bdl ON annee=:anne AND mois=:mois BY annee,mois");
+        $req->bindValue(':annee', $annee, PDO::PARAM_INT);
+        $req->bindValue(':mois', $mois, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
@@ -647,11 +650,12 @@ class Model
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function setEstValideBdl($id_bdl, $id_interlocuteur, $valide)
+    public function setEstValideBdlint($annee, $mois, $id_interlocuteur, $valide)
     {
-        $req = $this->bd->prepare("UPDATE BON_DE_LIVRAISON SET est_valide = :valide, id_interlocuteur = :id_interlocuteur WHERE id_bdl = :id_bdl");
+        $req = $this->bd->prepare("UPDATE bdl SET signature_interlocuteur = :valide, id_interlocuteur = :id_interlocuteur WHERE annee=:annee AND mois=:mois ");
         $req->bindValue(':id_interlocuteur', $id_interlocuteur, PDO::PARAM_INT);
-        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
+        $req->bindValue(':annee', $annee, PDO::PARAM_INT);
+        $req->bindValue(':mois', $mois, PDO::PARAM_INT);
         $req->bindValue(':valide', $valide);
         $req->execute();
         return (bool) $req->rowCount();
@@ -866,7 +870,7 @@ class Model
 
     public function getDashboardCommercial($id_co)
     {
-        $req = $this->bd->prepare('SELECT nom_client, nom_composante, nom, prenom, id_prestataire 
+        $req = $this->bd->prepare('SELECT nom_client, nom_composante, nom, prenom, id_prestataire, id_composante
         FROM client NATURAL JOIN affecte 
         JOIN composante c USING(id_composante) 
         JOIN bdl USING (id_composante)  
@@ -944,7 +948,7 @@ class Model
      */
     public function getClientContactDashboardData()
     {
-        $req = $this->bd->prepare('SELECT DISTINCT p.nom, p.prenom, p.email, p.telephone
+        $req = $this->bd->prepare('SELECT DISTINCT p.nom, p.prenom, p.email, p.telephone,id_composante,id_prestataire
 FROM personne AS p
 INNER JOIN prestataire AS pr ON p.id_personne = pr.id_prestataire
 INNER JOIN represente AS r ON pr.id_prestataire = r.id_composante

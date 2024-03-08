@@ -20,7 +20,7 @@ class Controller_commercial extends Controller
         if (isset($_SESSION['id'])) {
             $bd = Model::getModel();
             $bdlLink = '?controller=commercial&action=mission_bdl';
-            $headerDashboard = ['Société', 'Composante', 'Nom Mission', 'Préstataire assigné', 'Bon de livraison'];
+            $headerDashboard = ['Société', 'Composante', 'Préstataire assigné', 'Bon de livraison'];
             $data = ['title' => 'Mes composantes', 'menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'header' => $headerDashboard, 'dashboard' => $bd->getdashboardCommercial($_SESSION['id'])];
             $this->render('tableau', $data);
         } else {
@@ -341,5 +341,4 @@ class Controller_commercial extends Controller
             $this->render('infos_composante', $data);
         }
     }
-
 }

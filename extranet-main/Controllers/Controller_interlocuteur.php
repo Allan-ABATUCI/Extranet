@@ -87,15 +87,23 @@ class Controller_interlocuteur extends Controller
             session_start();
         }
         if (isset($_GET['id'])) {
-            $typeBdl = $bd->getBdlTypeAndMonth($_GET['id']);
+            $typeBdl = $bd->getBdlType($_GET['annee'], $_GET['mois']);
+            if (array_key_exists('numero', $typeBdl)) {
+                $typeBdl['type_bdl'] = 'Heure';
+            } elseif (array_key_exists('idType', $typeBdl)) {
+                $typeBdl['type_bdl'] = 'Demi-journée';
+            } else {
+                $typeBdl['type_bdl'] = 'Journée';
+            }
+
             if ($typeBdl['type_bdl'] == 'Heure') {
-                $activites = $bd->getAllNbHeureActivite($_GET['id']);
+                $activites = $bd->getAllNbHeureActivite($_GET['annee'], $_GET['mois']);
             }
             if ($typeBdl['type_bdl'] == 'Demi-journée') {
-                $activites = $bd->getAllDemiJourActivite($_GET['id']);
+                $activites = $bd->getAllDemiJourActivite($_GET['annee'], $_GET['mois']);
             }
             if ($typeBdl['type_bdl'] == 'Journée') {
-                $activites = $bd->getAllJourActivite($_GET['id']);
+                $activites = $bd->getAllJourActivite($_GET['annee'], $_GET['mois']);
             }
 
             $data = ['bdl' => $typeBdl, 'menu' => $this->action_get_navbar(), 'activites' => $activites];
@@ -115,8 +123,8 @@ class Controller_interlocuteur extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_GET['id']) && isset($_GET['valide'])) {
-            $bd->setEstValideBdl(e($_GET['id']), $_SESSION['id'], e($_GET['valide']));
+        if (isset($_GET['annee']) && isset($_GET['valide'])) {
+            $bd->setEstValideBdlint(e($_GET['annee']), e($_GET['mois']), $_SESSION['id'], e($_GET['valide']));
             $this->action_consulter_bdl();
         } else {
             echo 'Une erreur est survenue lors de la validation de ce bon de livraison';
