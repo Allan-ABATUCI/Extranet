@@ -708,7 +708,7 @@ class Model
 
     public function setTelClient($id, $tel)
     {
-        $req = $this->bd->prepare("UPDATE CLIENT SET telephone_client = :tel WHERE id_client = :id");
+        $req = $this->bd->prepare("UPDATE CLIENT SET tel_client = :tel WHERE id_client = :id");
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':tel', $tel, PDO::PARAM_STR);
         $req->execute();
@@ -791,10 +791,11 @@ class Model
         return (bool) $req->rowCount();
     }
 
-    public function setDateBdlActivite($id, $date)
+    public function setDateBdlActivite($annee, $mois, $date)
     {
-        $req = $this->bd->prepare("UPDATE ACTIVITE SET date_bdl = :date WHERE id_activite = :id");
-        $req->bindValue(':id', $id, PDO::PARAM_INT);
+        $req = $this->bd->prepare("UPDATE periode SET jour_du_mois = :date WHERE annee=:annee AND mois = :mois");
+        $req->bindValue(':annee', $annee, PDO::PARAM_INT);
+        $req->bindValue(':mois', $mois, PDO::PARAM_STR);
         $req->bindValue(':date', $date, PDO::PARAM_STR);
         $req->execute();
         return (bool) $req->rowCount();
@@ -821,7 +822,7 @@ class Model
 
     public function setFinHeurePlageHoraire($id, $heure)
     {
-        $req = $this->bd->prepare("UPDATE PLAGE_HORAIRE SET fin_heure = :heure WHERE id_activite = :id");
+        $req = $this->bd->prepare("UPDATE creneau SET fin_heure = :heure WHERE id_activite = :id");
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':heure', $heure, PDO::PARAM_STR);
         $req->execute();
