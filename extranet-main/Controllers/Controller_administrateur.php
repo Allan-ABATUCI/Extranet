@@ -24,8 +24,8 @@ class Controller_administrateur extends Controller
             $bd = Model::getModel();
             $bdlLink = '?controller=administrateur&action=mission_bdl';
             $buttonLink = '?controller=administrateur&action=ajout_mission_form';
-            $headerDashboard = ['Société', 'Composante', 'Nom Mission', 'Préstataire assigné', 'Bon de livraison'];
-            $data = ['menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'buttonLink' => $buttonLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardGestionnaire()];
+            $headerDashboard = ['Société', 'Composante', 'Préstataire assigné', 'Bon de livraison'];
+            $data = ['title' => 'Mes composantes', 'menu' => $this->action_get_navbar(), 'bdlLink' => $bdlLink, 'buttonLink' => $buttonLink, 'header' => $headerDashboard, 'dashboard' => $bd->getDashboardGestionnaire()];
             $this->render('tableau', $data);
         } else {
             echo 'Une erreur est survenue lors du chargement du tableau de bord';
@@ -65,7 +65,6 @@ class Controller_administrateur extends Controller
             $data = ['title' => 'Gestionnaires', 'cardLink' => $cardLink, 'buttonLink' => $buttonLink, "person" => $bd->getAllGestionnaires(), 'menu' => $this->action_get_navbar()];
             $this->render("liste", $data);
         }
-
     }
 
     /**
@@ -634,5 +633,3 @@ class Controller_administrateur extends Controller
         }
     }
 }
-
-?>

@@ -7,3 +7,15 @@ document.getElementById('menu-button').addEventListener('click', function() {
     menu.style.left = "0px";
   }
 });
+function setActiveLink(linkId) {
+    var links = document.querySelectorAll('a');
+    links.forEach(function(link) {
+        link.classList.remove('active');
+    });
+    var activeLink = document.getElementById(linkId);
+    if (activeLink) {
+        activeLink.classList.add('active');
+    } else {
+        console.error("Link with ID " + linkId + " not found.");
+    }
+}

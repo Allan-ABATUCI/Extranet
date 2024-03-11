@@ -12,6 +12,7 @@ body {
     background: center/cover url('https://images.pexels.com/photos/5827389/pexels-photo-5827389.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1') no-repeat #0000;
     font-size: var(--font-size--small);
     font-weight: lighter;
+    overflow-x: hidden;
 }
 
 img {
@@ -207,4 +208,13 @@ button:hover {
 
 input::placeholder{
     font-size: var(--font-size--little);
+}
+
+/* CSS for active link */
+a.active {
+    color: blue;
+    /* Text color */
+    background-color: white;
+    /* Background color */
+    /* Add any additional styles for active links here */
 }

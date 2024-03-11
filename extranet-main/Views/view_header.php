@@ -2,10 +2,10 @@
 <header>
     <nav class="header-navbar">
         <div class="logo">Perform Vision</div>
-        <?php if (isset($menu)): ?>
+        <?php if (isset($menu)) : ?>
             <ul class="menu-list">
-                <?php foreach ($menu as $m): ?>
-                    <li><a href=<?= $m['link'] ?>><?= $m['name'] ?></li></a>
+                <?php foreach ($menu as $c => $m) : ?>
+                    <li id="link<?= $c ?>" onclick=" setActiveLink('link<?= $c ?>')"><a href=<?= $m['link'] ?>><?= $m['name'] ?></li></a>
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
@@ -13,8 +13,7 @@
             <li>
                 <a class='right-elt' href="?controller=<?= $_GET['controller'] ?>&action=infos" id="username">
                     <i class="fa fa-user-circle" aria-hidden="true"></i>
-                    <?php if (isset($_SESSION)):
-                        ;
+                    <?php if (isset($_SESSION)) :;
                         echo '&nbsp;' . '<p>' . $_SESSION['nom'];
                         echo '&nbsp;' . $_SESSION['prenom'] . '</p>';
                     endif; ?>
@@ -29,7 +28,7 @@
 
                 <nav id="sliding-menu">
                     <ul>
-                        <?php foreach ($_SESSION['roles'] as $r): ?>
+                        <?php foreach ($_SESSION['roles'] as $r) : ?>
                             <div>
                                 <li><a href="?controller=<?= $r ?>&action=default">
 
