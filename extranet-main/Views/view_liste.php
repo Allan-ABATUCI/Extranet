@@ -24,7 +24,7 @@ require 'view_header.php';
                                             echo '&annee=' . $p['annee'] . '&mois=' . $p['mois'];
                                         else :
                                             echo '&id=' . $p['id'];
-                                        endif; ?>' class="block">
+                                        endif; ?>' class="block card">
                 <h2>
                     <?php
                     if (array_key_exists('nom', $p)) :
@@ -34,7 +34,7 @@ require 'view_header.php';
                         echo $p['nom_client'];
                     endif;
                     if (array_key_exists('nom_composante', $p) and !array_key_exists('nom_client', $p)) :
-                        echo $p['nom_composante'];
+                        echo "<p>" . $p['nom_composante'] . "</p>";
                     endif;
                     ?>
                 </h2>

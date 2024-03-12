@@ -534,7 +534,6 @@ class Controller_administrateur extends Controller
             );
             $this->action_ajout_interlocuteur_dans_composante();
             $this->action_ajout_commercial_dans_composante();
-            $this->action_ajout_mission();
         }
         if ($_POST['tel']) {
             $this->action_ajout_client_form();
@@ -547,19 +546,6 @@ class Controller_administrateur extends Controller
      * Vérifie que la mission n'existe pas pour ensuite la créer
      * @return void
      */
-    public function action_ajout_mission()
-    {
-        $bd = Model::getModel();
-        if (!$bd->checkMissionExiste(e($_POST['mission']), e($_POST['composante']))) {
-            $bd->addMission(
-                e($_POST['type-bdl']),
-                e($_POST['mission']),
-                e($_POST['date-mission']),
-                e($_POST['composante']),
-                e($_POST['client'])
-            );
-        }
-    }
 
     /**
      * Vérifie d'avoir toutes les informations d'un prestataire pour ensuite créer la personne et l'ajouter en tant que prestataire
@@ -614,8 +600,16 @@ class Controller_administrateur extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_GET['id'])) {
-            $typeBdl = $bd->getBdlTypeAndMonth(e($_GET['id']));
+        if (isset($_GET['annee']) && isset($_GET['annee'])) {
+            $typeBdl = $bd->getBdlType($_GET['annee'], $_GET['mois']);
+            if (array_key_exists('numero', $typeBdl)) {
+                $typeBdl['type_bdl'] = 'Heure';
+            } elseif (array_key_exists('idType', $typeBdl)) {
+                $typeBdl['type_bdl'] = 'Demi-journée';
+            } else {
+                $typeBdl['type_bdl'] = 'Journée';
+            }
+
             if ($typeBdl['type_bdl'] == 'Heure') {
                 $activites = $bd->getAllNbHeureActivite(e($_GET['id']));
             }

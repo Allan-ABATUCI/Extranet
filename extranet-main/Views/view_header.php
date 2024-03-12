@@ -2,6 +2,27 @@
 <header>
     <nav class="header-navbar">
         <div class="logo">Perform Vision</div>
+        <?php
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        // Check if user is logged in, redirect to login page if not
+        if (!isset($_SESSION['id'])) {
+            header("Location: index.php");
+            exit();
+        }
+
+        if (isset($_POST['disconnect'])) {
+            // Destroy the session
+            session_unset();
+            session_destroy();
+
+            // Redirect to login page
+            header("Location: index.php");
+            exit();
+        }
+        ?>
         <?php if (isset($menu)) : ?>
             <ul class="menu-list">
                 <?php foreach ($menu as $c => $m) : ?>
@@ -28,24 +49,29 @@
 
                 <nav id="sliding-menu">
                     <ul>
-                        <?php foreach ($_SESSION['roles'] as $r) : ?>
-                            <div>
-                                <li><a href="?controller=<?= $r ?>&action=default">
+                        <?php
+                        if (isset($_SESSION['roles'])) :
+                            foreach ($_SESSION['roles'] as $r) : ?>
+                                <div>
+                                    <li><a href="?controller=<?= $r ?>&action=default">
 
-                                        <?= $r ?>
+                                            <?= $r ?>
 
-                                    </a></li>
-                            </div>
+                                        </a></li>
+                                </div>
 
 
-                        <?php endforeach; ?>
+                        <?php endforeach;
+                        endif; ?>
                     </ul>
                 </nav>
 
             </li>
         </ul>
         <ul class="header-exit">
-            <li><a href="?controller=login" class='right-elt'><i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
+            <form method="post">
+                <button type="submit" name="disconnect"><i class="fa fa-sign-out" aria-hidden="true"></i></button></a></li>
+            </form>
         </ul>
     </nav>
 </header>

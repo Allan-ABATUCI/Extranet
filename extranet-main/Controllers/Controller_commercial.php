@@ -111,7 +111,7 @@ class Controller_commercial extends Controller
             session_start();
         }
         if (isset($_GET['id'])) {
-            $typeBdl = $bd->getBdlTypeAndMonth(e($_GET['id']));
+            $typeBdl = $bd->getBdlType(e($_GET['id']));
             if ($typeBdl['type_bdl'] == 'Heure') {
                 $activites = $bd->getAllNbHeureActivite(e($_GET['id']));
             }
@@ -231,7 +231,7 @@ class Controller_commercial extends Controller
         $bd = Model::getModel();
         if (isset($_GET['id-composante']) && isset($_POST['email-interlocuteur']) && isset($_POST['nom-interlocuteur']) && isset($_POST['prenom-interlocuteur'])) {
             if (!$bd->checkInterlocuteurExiste(e($_POST['email-interlocuteur']))) {
-                $this->action_ajout_personne(e(_POST['nom-interlocuteur']), e($_POST['prenom-interlocuteur']), e($_POST['email-interlocuteur']));
+                $this->action_ajout_personne(e($_POST['nom-interlocuteur']), e($_POST['prenom-interlocuteur']), e($_POST['email-interlocuteur']));
                 $bd->addInterlocuteur(e($_POST['email-interlocuteur']));
             }
             $bd->assignerInterlocuteurComposanteByIdComposante(e($_GET['id-composante']), e($_POST['email-interlocuteur']));

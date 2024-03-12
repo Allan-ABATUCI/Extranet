@@ -210,11 +210,13 @@ input::placeholder{
     font-size: var(--font-size--little);
 }
 
-/* CSS for active link */
+
 a.active {
     color: blue;
     /* Text color */
     background-color: white;
-    /* Background color */
-    /* Add any additional styles for active links here */
+}
+
+block card{
+    text-align: center;
 }
