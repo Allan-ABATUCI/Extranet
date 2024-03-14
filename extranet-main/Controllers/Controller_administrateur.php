@@ -41,7 +41,6 @@ class Controller_administrateur extends Controller
         return [
             ['link' => '?controller=administrateur&action=clients', 'name' => 'Société'],
             ['link' => '?controller=administrateur&action=composantes', 'name' => 'Composantes'],
-            ['link' => '?controller=administrateur&action=missions', 'name' => 'Missions'],
             ['link' => '?controller=administrateur&action=prestataires', 'name' => 'Prestataires'],
             ['link' => '?controller=administrateur&action=commerciaux', 'name' => 'Commerciaux'],
             ['link' => '?controller=administrateur&action=gestionnaires', 'name' => 'Gestionnaires']
@@ -611,13 +610,13 @@ class Controller_administrateur extends Controller
             }
 
             if ($typeBdl['type_bdl'] == 'Heure') {
-                $activites = $bd->getAllNbHeureActivite(e($_GET['id']));
+                $activites = $bd->getAllNbHeureActivite(e($_GET['annee']), e($_GET['mois']));
             }
             if ($typeBdl['type_bdl'] == 'Demi-journée') {
-                $activites = $bd->getAllDemiJourActivite(e($_GET['id']));
+                $activites = $bd->getAllDemiJourActivite(e($_GET['annee']), e($_GET['mois']));
             }
             if ($typeBdl['type_bdl'] == 'Journée') {
-                $activites = $bd->getAllJourActivite(e($_GET['id']));
+                $activites = $bd->getAllJourActivite(e($_GET['annee']), e($_GET['mois']));
             }
 
             $data = ['menu' => $this->action_get_navbar(), 'bdl' => $typeBdl, 'activites' => $activites];

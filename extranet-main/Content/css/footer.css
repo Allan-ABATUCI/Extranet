@@ -7,6 +7,8 @@ footer {
     height: 10vh;
     font-size: var(--font-size-small);
     margin-top: 10vh;
+    position: relative;
+    bottom:0px;
 }
 .nom-entreprise {
     flex: 0.25; /* Chaque partie prendra une part égale de l'espace disponible */

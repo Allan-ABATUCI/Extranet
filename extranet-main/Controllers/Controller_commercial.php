@@ -111,15 +111,24 @@ class Controller_commercial extends Controller
             session_start();
         }
         if (isset($_GET['id'])) {
-            $typeBdl = $bd->getBdlType(e($_GET['id']));
+            $typeBdl = $bd->getBdlType(e($_GET['annee']), e($_GET['mois']));
+
+            if (array_key_exists('numero', $typeBdl)) {
+                $typeBdl['type_bdl'] = 'Heure';
+            } elseif (array_key_exists('idType', $typeBdl)) {
+                $typeBdl['type_bdl'] = 'Demi-journée';
+            } else {
+                $typeBdl['type_bdl'] = 'Journée';
+            }
+
             if ($typeBdl['type_bdl'] == 'Heure') {
-                $activites = $bd->getAllNbHeureActivite(e($_GET['id']));
+                $activites = $bd->getAllNbHeureActivite(e($_GET['annee']), e($_GET['mois']));
             }
             if ($typeBdl['type_bdl'] == 'Demi-journée') {
-                $activites = $bd->getAllDemiJourActivite(e($_GET['id']));
+                $activites = $bd->getAllDemiJourActivite(e($_GET['annee']), e($_GET['mois']));
             }
             if ($typeBdl['type_bdl'] == 'Journée') {
-                $activites = $bd->getAllJourActivite(e($_GET['id']));
+                $activites = $bd->getAllJourActivite(e($_GET['annee']), e($_GET['mois']));
             }
 
             $data = ['menu' => $this->action_get_navbar(), 'bdl' => $typeBdl, 'activites' => $activites];

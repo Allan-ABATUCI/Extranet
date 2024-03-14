@@ -44,7 +44,6 @@ class Controller_gestionnaire extends Controller
         return [
             ['link' => '?controller=gestionnaire&action=clients', 'name' => 'Société'],
             ['link' => '?controller=gestionnaire&action=composantes', 'name' => 'Composantes'],
-            ['link' => '?controller=gestionnaire&action=missions', 'name' => 'Missions'],
             ['link' => '?controller=gestionnaire&action=prestataires', 'name' => 'Prestataires'],
             ['link' => '?controller=gestionnaire&action=commerciaux', 'name' => 'Commerciaux']
         ];
@@ -403,7 +402,7 @@ class Controller_gestionnaire extends Controller
             );
             $this->action_ajout_interlocuteur_dans_composante();
             $this->action_ajout_commercial_dans_composante();
-            $this->action_ajout_mission();
+
         }
         if (isset($_POST['tel'])) {
             $this->action_ajout_client_form();
@@ -412,23 +411,6 @@ class Controller_gestionnaire extends Controller
         }
     }
 
-    /**
-     * Vérifie que la mission n'existe pas pour ensuite la créer
-     * @return void
-     */
-    public function action_ajout_mission()
-    {
-        $bd = Model::getModel();
-        if (!$bd->checkMissionExiste(e($_POST['mission']), e($_POST['composante']))) {
-            $bd->addMission(
-                e($_POST['type-bdl']),
-                e($_POST['mission']),
-                e($_POST['date-mission']),
-                e($_POST['composante']),
-                e($_POST['client'])
-            );
-        }
-    }
 
     /**
      * Vérifie d'avoir toutes les informations d'un prestataire pour ensuite créer la personne et l'ajouter en tant que prestataire
@@ -566,16 +548,25 @@ class Controller_gestionnaire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_GET['id'])) {
-            $typeBdl = $bd->getBdlTypeAndMonth(e($_GET['id']));
+        if (isset($_GET['annee'])) {
+            $typeBdl = $bd->getBdlType(e($_GET['annee']), e($_GET['mois']));
+
+            if (array_key_exists('numero', $typeBdl)) {
+                $typeBdl['type_bdl'] = 'Heure';
+            } elseif (array_key_exists('idType', $typeBdl)) {
+                $typeBdl['type_bdl'] = 'Demi-journée';
+            } else {
+                $typeBdl['type_bdl'] = 'Journée';
+            }
+
             if ($typeBdl['type_bdl'] == 'Heure') {
-                $activites = $bd->getAllNbHeureActivite(e($_GET['id']));
+                $activites = $bd->getAllNbHeureActivite(e($_GET['annee']), e($_GET['mois']));
             }
             if ($typeBdl['type_bdl'] == 'Demi-journée') {
-                $activites = $bd->getAllDemiJourActivite(e($_GET['id']));
+                $activites = $bd->getAllDemiJourActivite(e($_GET['annee']), e($_GET['mois']));
             }
             if ($typeBdl['type_bdl'] == 'Journée') {
-                $activites = $bd->getAllJourActivite(e($_GET['id']));
+                $activites = $bd->getAllJourActivite(e($_GET['annee']), e($_GET['mois']));
             }
 
             $data = ['menu' => $this->action_get_navbar(), 'bdl' => $typeBdl, 'activites' => $activites];

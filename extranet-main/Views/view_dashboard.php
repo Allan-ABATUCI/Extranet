@@ -10,7 +10,7 @@
     <table>
         <thead>
             <tr>
-                <?php foreach ($header as $title) : ?>
+                <?php foreach ($header as $title): ?>
                     <th>
                         <?= $title ?>
                     </th>
@@ -18,14 +18,14 @@
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($dashboard as $row) : ?>
+            <?php foreach ($dashboard as $row): ?>
                 <tr>
-                    <?php foreach ($row as $key => $value) : ?>
-                        <?php if (!preg_match("/^id/", $key) && $key != "prenom") : ?>
+                    <?php foreach ($row as $key => $value): ?>
+                        <?php if (!preg_match("/^id/", $key) && $key != "prenom"): ?>
                             <td>
-                                <?php if ($key == "nom") : ?>
+                                <?php if ($key == "nom"): ?>
                                     <?= $value . " " . $row['prenom'] ?>
-                                <?php else : ?>
+                                <?php else: ?>
                                     <?= "{$value}" ?>
                                 <?php endif ?>
                             </td>
@@ -33,9 +33,10 @@
                     <?php endforeach; ?>
                     <td class="dashboard-link">
                         <div>
-                            <a href="<?= $bdlLink . "&id=" . $row['id_composante'] . "&id-prestataire=" ?><?php if (isset($row['id_prestataire'])) {
-                                                                                                                echo $row['id_prestataire'];
-                                                                                                            }; ?>">
+                            <a href="<?= $bdlLink . "&id=" . $row['id_composante'] ?><?php if (isset($row['id_prestataire'])) {
+                                      echo "&id-prestataire=" . $row['id_prestataire'];
+                                  }
+                                  ; ?>">
                                 <i class="fa fa-eye" aria-hidden="true"></i>
                                 <p>Consulter</p>
                             </a>

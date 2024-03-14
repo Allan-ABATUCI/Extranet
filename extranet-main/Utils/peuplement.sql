@@ -63,3 +63,24 @@ VALUES
 
 insert into affecte values (1,1),(2,2),(3,3);
 insert into represente values (1,1),(2,2),(3,3);
+
+INSERT INTO periode (id_composante, id_prestataire, annee, mois, jour_du_mois)
+VALUES 
+(1, 1, 2023, 1, 0),
+(2, 2, 2023, 2, 0),
+(3, 3, 2023, 3, 0);
+
+-- Insertion into creneau table
+INSERT INTO creneau (heure_arrivee, heure_depart, id_composante, id_prestataire, annee, mois, jour_du_mois)
+VALUES 
+('08:00', '12:00', 1, 1, 2023, 1, 0);
+
+-- Insertion into journee table
+INSERT INTO journee (id_composante, id_prestataire, annee, mois, jour_du_mois)
+VALUES 
+(2, 2, 2023, 2, 0);
+
+-- Insertion into demijournee table
+INSERT INTO demijournee (id_type, id_composante, id_prestataire, annee, mois, jour_du_mois)
+VALUES 
+(3, 3, 3, 2023, 3, 0);

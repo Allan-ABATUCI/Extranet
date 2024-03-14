@@ -12,41 +12,41 @@ require 'view_header.php';
         <?php if (
             ((str_contains($_GET['controller'], 'gestionnaire') || str_contains($_GET['controller'], 'administrateur')) && !isset($_GET['id']))
             || ((str_contains($_GET['controller'], 'prestataire') && isset($person[0]['annee'])))
-        ) : ?>
+        ): ?>
             <button type="submit" class="button-primary" onclick="window.location='<?= $buttonLink ?>'">Ajouter
             </button>
         <?php endif; ?>
     </div>
 
     <div class="element-block">
-        <?php foreach ($person as $p) : ?>
-            <a href='<?= $cardLink ?><?php if (isset($p['mois']) || isset($p['annee'])) :
-                                            echo '&annee=' . $p['annee'] . '&mois=' . $p['mois'];
-                                        else :
-                                            echo '&id=' . $p['id'];
-                                        endif; ?>' class="block card">
+        <?php foreach ($person as $p): ?>
+            <a href='<?= $cardLink ?><?php if (isset($p['mois']) || isset($p['annee'])):
+                  echo '&annee=' . $p['annee'] . '&mois=' . $p['mois'] . '&composante=' . $p['id_composante'];
+              else:
+                  echo '&id=' . $p['id'];
+              endif; ?>' class="block card">
                 <h2>
                     <?php
-                    if (array_key_exists('nom', $p)) :
+                    if (array_key_exists('nom', $p)):
                         echo $p['nom'] . ' ' . $p['prenom'];
                     endif;
-                    if (array_key_exists('nom_client', $p) and array_key_exists('tel_client', $p)) :
+                    if (array_key_exists('nom_client', $p) and array_key_exists('tel_client', $p)):
                         echo $p['nom_client'];
                     endif;
-                    if (array_key_exists('nom_composante', $p) and !array_key_exists('nom_client', $p)) :
+                    if (array_key_exists('nom_composante', $p) and !array_key_exists('nom_client', $p)):
                         echo "<p>" . $p['nom_composante'] . "</p>";
                     endif;
                     ?>
                 </h2>
                 <h3>
                     <?php
-                    if (array_key_exists('mois', $p)) :
+                    if (array_key_exists('mois', $p)):
                         echo $p['annee'] . ' - ' . $p['mois'];
                     endif;
-                    if (array_key_exists('nom_client', $p) and !array_key_exists('tel_client', $p)) :
+                    if (array_key_exists('nom_client', $p) and !array_key_exists('tel_client', $p)):
                         echo $p['nom_client'];
                     endif;
-                    if (array_key_exists('tel_client', $p)) :
+                    if (array_key_exists('tel_client', $p)):
                         echo $p['tel_client'];
                     endif;
                     ?>

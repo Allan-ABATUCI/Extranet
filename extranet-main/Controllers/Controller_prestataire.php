@@ -89,27 +89,19 @@ class Controller_prestataire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_GET['id'])) {
-            $typeBdl = $bd->getbdltype($_GET['annee'], $_GET['mois']);
-            if (array_key_exists('numero', $typeBdl)) {
-                $infosBdl = $bd->getAllNbHeureActivite($_GET['id']);
-            } elseif ($typeBdl['type_bdl'] == 'Journée') {
-                $infosBdl = $bd->getAllJourActivite($_GET['id']);
-            } elseif ($typeBdl['type_bdl'] == 'Demi-journée') {
-                $infosBdl = $bd->getAllDemiJourActivite($_GET['id']);
-            }
-            $data = ['menu' => $this->action_get_navbar(), 'bdl' => $typeBdl, 'infosBdl' => $infosBdl];
-            $this->render("activite", $data);
-        } else {
-            echo 'Une erreur est survenue lors du chargement de ce bon de livraison';
+            $typeBdl = $bd->getbdltype(e($_GET['annee']), e($_GET['mois']), e($_GET['composantes']));
+         
+
+                $data = ['menu' => $this->action_get_navbar(), 'bdl' => $typeBdl, 'data' => $data_avant];
+                $this->render("bdl", $data);
+          
         }
     }
-
     /**
      * Vérifie d'avoir les informations nécessaire pour renvoyer la vue liste avec les bonnes variables pour afficher la liste des bons de livraisons du prestataire en fonction de la mission
      * @return void
      */
-    public function action_composante_bdl()
+    function action_composante_bdl()
     {
         $bd = Model::getModel();
         if (session_status() == PHP_SESSION_NONE) {
@@ -117,13 +109,13 @@ class Controller_prestataire extends Controller
         }
         if (isset($_GET['id'])) {
             $buttonLink = '?controller=prestataire&action=ajout_bdl_form';
-            $cardLink = '?controller=prestataire&action=afficher_bdl';
+            $cardLink = '?controller=prestataire&action=afficher_bdl&composante=' . e($_GET['id']);
             $data = [
-                'title' => 'Bon de livraison de la composante' . $_GET['nom'],
+                'title' => 'Bon de livraison de la composante' . e($_GET['nom']),
                 'buttonLink' => $buttonLink,
                 'cardLink' => $cardLink,
                 'menu' => $this->action_get_navbar(),
-                'person' => $bd->getBdlsOfPrestataireByIdMission($_GET['id'], $_SESSION['id'])
+                'person' => $bd->getBdlsOfPrestataireByIdMission(e($_GET['id']), $_SESSION['id'])
             ];
         }
         $this->render('liste', $data);

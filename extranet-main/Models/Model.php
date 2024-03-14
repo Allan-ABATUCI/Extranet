@@ -445,7 +445,7 @@ WHERE c.id_composante = :id');
      */
     public function addComposante($libelleVoie, $cp, $numVoie, $nomVoie, $nom_client, $nom_compo)
     {
-        $req = $this->bd->prepare("INSERT INTO ADRESSE(numero, nom_voie, id_type_voie, id_localite) SELECT :num, :nomVoie, (SELECT id_type_voie FROM TypeVoie WHERE libelle = :libelleVoie), (SELECT id_localite FROM localite WHERE cp = :cp)");
+        $req = $this->bd->prepare("INSERT INTO ADRESSE(numero, nom_voie, id_typevoie, id_localite) SELECT :num, :nomVoie, (SELECT id_typevoie FROM TypeVoie WHERE libelle = :libelleVoie), (SELECT id_localite FROM localite WHERE cp = :cp)");
         $req->bindValue(':num', $numVoie, PDO::PARAM_STR);
         $req->bindValue(':nomVoie', $nomVoie, PDO::PARAM_STR);
         $req->bindValue(':libelleVoie', $libelleVoie, PDO::PARAM_STR);
@@ -624,7 +624,7 @@ WHERE c.id_composante = :id');
 
     public function getAllBdlPrestataire($id_pr)
     {
-        $req = $this->bd->prepare("SELECT annee,mois, nom_composante FROM composante NATURAL JOIN bdl JOIN prestataire ON bdl.id_prestataire =:id");
+        $req = $this->bd->prepare("SELECT DISTINCT annee,mois, nom_composante,id_composante FROM composante NATURAL JOIN bdl JOIN prestataire ON bdl.id_prestataire =:id");
         $req->bindValue(':id', $id_pr, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall();
@@ -632,25 +632,27 @@ WHERE c.id_composante = :id');
     //pour créneau
     public function getAllNbHeureActivite($annee, $mois)
     {
-        $req = $this->bd->prepare("SELECT heure_arrivee,heure_départ, joursDuMois FROM periode JOIN bdl ON annee=:anne AND mois=:mois BY annee,mois");
+        $req = $this->bd->prepare("SELECT * FROM periode JOIN bdl ON annee=:anne AND mois=:mois BY annee,mois");
         $req->bindValue(':annee', $annee, PDO::PARAM_INT);
         $req->bindValue(':mois', $mois, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getAllDemiJourActivite($id_bdl)
+    public function getAllDemiJourActivite($annee, $mois)
     {
-        $req = $this->bd->prepare("SELECT nb_demi_journee, a.commentaire, date_bdl FROM DEMI_JOUR JOIN ACTIVITE a USING(id_activite) JOIN BON_DE_LIVRAISON using(id_bdl) WHERE id_bdl = :id_bdl ORDER BY date_bdl");
-        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
+        $req = $this->bd->prepare("SELECT * FROM demijournee WHERE annee = :annee AND mois=:mois ORDER BY jour_du_mois");
+        $req->bindValue(':annee', $annee, PDO::PARAM_INT);
+        $req->bindValue(':mois', $mois, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getAllJourActivite($id_bdl)
+    public function getAllJourActivite($annee, $mois)
     {
-        $req = $this->bd->prepare("SELECT journee, a.commentaire, date_bdl FROM JOUR JOIN ACTIVITE a USING(id_activite) JOIN BON_DE_LIVRAISON using(id_bdl) WHERE id_bdl = :id_bdl ORDER BY date_bdl");
-        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
+        $req = $this->bd->prepare("SELECT * FROM journee WHERE annee = :annee AND mois=:mois ORDER BY jour_du_mois");
+        $req->bindValue(':annee', $annee, PDO::PARAM_INT);
+        $req->bindValue(':mois', $mois, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
@@ -769,7 +771,7 @@ WHERE c.id_composante = :id');
 
     public function setLibelleTypevoie($id, $libelle)
     {
-        $req = $this->bd->prepare("UPDATE ADRESSE SET id_type_voie = (SELECT id_type_voie FROM TYPEVOIE WHERE LOWER(libelle) = LOWER(:libelle))
+        $req = $this->bd->prepare("UPDATE ADRESSE SET id_typevoie = (SELECT id_typevoie FROM TYPEVOIE WHERE LOWER(libelle) = LOWER(:libelle))
                WHERE id_adresse = (SELECT id_adresse FROM COMPOSANTE JOIN ADRESSE USING(id_adresse) WHERE id_composante = :id)");
         $req->bindValue(':id', $id, PDO::PARAM_INT);
         $req->bindValue(':libelle', $libelle);
@@ -919,11 +921,12 @@ WHERE c.id_composante = :id');
     }
 
 
-    public function getbdltype($annee, $mois)
+    public function getbdltype($annee, $mois, $composante)
     {
-        $req = $this->bd->prepare('SELECT * FROM periode JOIN bdl ON annee=:annee AND mois=:mois WHERE jour_du_mois = 0');
+        $req = $this->bd->prepare("SELECT * FROM periode JOIN bdl USING(annee,mois,id_composante) WHERE jour_du_mois = 0 AND annee = :annee AND mois=:mois AND id_composante=:composante");
         $req->bindValue(':annee', $annee, PDO::PARAM_INT);
         $req->bindValue(':mois', $mois, PDO::PARAM_INT);
+        $req->bindValue(':composante', $composante, PDO::PARAM_INT);
         $req->execute();
         return $req->fetch(PDO::FETCH_ASSOC);
     }
@@ -1057,7 +1060,7 @@ INNER JOIN interlocuteur AS i ON r.id_interlocuteur = :id');
     public function getBdlsOfPrestataireByIdMission($id_composante, $id_prestataire)
     {
         $req = $this->bd->prepare(
-            "SELECT annee, mois, nom_composante, mois 
+            "SELECT annee, mois, nom_composante 
         FROM composante JOIN
         bdl USING(id_composante) JOIN
         prestataire USING(id_prestataire) 
@@ -1068,6 +1071,22 @@ INNER JOIN interlocuteur AS i ON r.id_interlocuteur = :id');
         $req->bindValue(':id_prestataire', $id_prestataire, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getbdl($annee, $mois, $composante, $id)
+    {
+        $req = $this->bd->prepare('SELECT *
+FROM bdl
+WHERE annee = :annee
+  AND mois = :mois
+  AND id_composante = :composante
+  AND id_prestataire = :id;
+');
+        $req->bindValue(':annee', $annee, PDO::PARAM_INT);
+        $req->bindValue(':mois', $mois, PDO::PARAM_INT);
+        $req->bindValue(':composante', $composante, PDo::PARAM_INT);
+        $req->bindValue(':id', $id, PDO::PARAM_INT);
+        return $req->fetch(PDO::FETCH_ASSOC);
     }
 
 
