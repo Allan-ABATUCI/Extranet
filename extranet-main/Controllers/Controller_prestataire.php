@@ -69,15 +69,7 @@ class Controller_prestataire extends Controller
      * Ajoute dans la base de données la date à laquelle le prestataire est absent
      * @return void
      */
-    public function action_prestataire_creer_absences()
-    {
-        $bd = Model::getModel();
-        if (isset($_POST['prenom']) && isset($_POST['nom']) && isset($_POST['email']) && isset($_POST['Date']) && isset($_POST['motif'])) {
-            $bd->addAbsenceForPrestataire($_POST['prenom'], $_POST['nom'], $_POST['email'], $_POST['Date'], $_POST['motif']);
-        } else {
-            $this->action_error("données incomplètes");
-        }
-    }
+
 
     /**
      * Renvoie la vue qui lui permet de remplir son bon de livraion avec le bon type
@@ -89,12 +81,26 @@ class Controller_prestataire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-            $typeBdl = $bd->getbdltype(e($_GET['annee']), e($_GET['mois']), e($_GET['composantes']));
-         
+        if (isset($_GET['annee']) && isset($_GET['mois'])) {
 
-                $data = ['menu' => $this->action_get_navbar(), 'bdl' => $typeBdl, 'data' => $data_avant];
+            $typeBdl = $bd->getbdltype($_GET['annee'], $_GET['mois'], $_GET['composante']);
+            if (isset($typeBdl)) {
+                if (array_key_exists('numero', $typeBdl)) {
+                    $typeBdl['type_bdl'] = 'Heure';
+                } elseif (array_key_exists('idType', $typeBdl)) {
+                    $typeBdl['type_bdl'] = 'Demi-journée';
+                } else {
+                    $typeBdl['type_bdl'] = 'Journée';
+                }
+
+                $data_avant = $bd->getbdl(e($_GET['annee']), e($_GET['mois']), e($_GET['composante']), $_SESSION['id']);
+
+
+                $data = ['menu' => $this->action_get_navbar(), 'bdl' => $typeBdl, '$data' => $data_avant];
                 $this->render("bdl", $data);
-          
+            } else {
+                echo 'Une erreur est survenue lors du chargement de ce bon de livraison';
+            }
         }
     }
     /**
@@ -162,49 +168,7 @@ class Controller_prestataire extends Controller
         }
     }
 
-    /**
-     * Récupère le tableau renvoyé par le JavaScript et rempli les lignes du bon de livraison en fonction de son type
-     * @return void
-     */
-    public function action_completer_bdl()
-    {
-        $bd = Model::getModel();
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-        // Récupérer les données depuis la requête POST
-        $data = json_decode(file_get_contents("php://input"), true);
 
-        // Vérifier si les données sont présentes
-        if ($data && is_array($data)) {
-            // Parcourir chaque ligne du tableau
-            foreach ($data as $row) {
-                // Vérifier si l'activite existe avant de l'ajouter, sinon la modifier
-                if ($bd->checkActiviteExiste($_GET['id'], $row[0])) {
-                    $id_activite = $bd->getIdActivite($row[0], $_GET['id']);
-                    if ($row[1] && $_GET['type'] == 'Heure') {
-                        $bd->setNbHeure($id_activite, (int) $row[1]);
-                    } elseif ($row[1] >= 0 && $row[1] <= 1 && $_GET['type'] == 'Journée') {
-                        $bd->setJourneeJour($id_activite, (int) $row[1]);
-                    } elseif ($row[1] >= 0 && $row[1] <= 2 && $_GET['type'] == 'Demi-journée') {
-                        $bd->setDemiJournee($id_activite, (int) $row[1]);
-                    }
-                    if ($row[2]) {
-                        $bd->setCommentaireActivite($id_activite, $row[2]);
-                    }
-                } elseif ($row[1]) {
-                    if ($row[1] && $_GET['type'] == 'Heure') {
-                        $bd->addNbHeureActivite($row[2], $_GET['id'], $_SESSION['id'], $row[0], (int) $row[1]);
-                    } elseif ($row[1] >= 0 && $row[1] <= 1 && $_GET['type'] == 'Journée') {
-                        $bd->addJourneeJour($row[2], $_GET['id'], $_SESSION['id'], $row[0], (int) $row[1]);
-                    } elseif ($row[1] >= 0 && $row[1] <= 2 && $_GET['type'] == 'Demi-journée') {
-                        $bd->addDemiJournee($row[2], $_GET['id'], $_SESSION['id'], $row[0], (int) $row[1]);
-                    }
-                }
-            }
-        }
-        $this->render('dashboard');
-    }
 
     /**
      * Renvoie le formulaire pour ajouter un bon de livraison

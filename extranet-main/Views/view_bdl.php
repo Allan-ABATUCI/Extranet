@@ -6,6 +6,7 @@ require 'view_header.php'; ?>
         <table class="bdl-table">
             <form action="">
                 <?php
+
                 if ($bdl['type_bdl'] == 'Heure') {
                     echo "
                 <label for='heure_arrivee'>Heure de début:</label>
