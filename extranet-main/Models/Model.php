@@ -632,7 +632,7 @@ WHERE c.id_composante = :id');
     //pour créneau
     public function getAllNbHeureActivite($annee, $mois)
     {
-        $req = $this->bd->prepare("SELECT * FROM periode JOIN bdl ON annee=:anne AND mois=:mois BY annee,mois");
+        $req = $this->bd->prepare("SELECT * FROM creneau JOIN bdl USING(annee,mois)WHERE annee=:annee AND mois=:mois ORDER BY annee,mois");
         $req->bindValue(':annee', $annee, PDO::PARAM_INT);
         $req->bindValue(':mois', $mois, PDO::PARAM_INT);
         $req->execute();
@@ -920,15 +920,65 @@ WHERE c.id_composante = :id');
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
 
-
-    public function getbdltype($annee, $mois, $composante)
+    /**
+     * donne le type de periode (jour 0 pour types permis)
+     *  renvoie creaneau journee demijournee celon type
+     * @return string
+     */
+    public function getbdltype($periode_id_composante, $periode_id_prestataire, $periode_annee, $periode_mois, $periode_jour_du_mois)
     {
-        $req = $this->bd->prepare("SELECT * FROM periode JOIN bdl USING(annee,mois,id_composante) WHERE jour_du_mois = 0 AND annee = :annee AND mois=:mois AND id_composante=:composante");
-        $req->bindValue(':annee', $annee, PDO::PARAM_INT);
-        $req->bindValue(':mois', $mois, PDO::PARAM_INT);
-        $req->bindValue(':composante', $composante, PDO::PARAM_INT);
-        $req->execute();
-        return $req->fetch(PDO::FETCH_ASSOC);
+        $pdo = $this->bd;
+
+        // Prepare SQL statements
+        $creneauQuery = "SELECT COUNT(*) FROM creneau WHERE id_composante = :composante AND id_prestataire = :prestataire AND annee = :annee AND mois = :mois AND jour_du_mois = :jour_du_mois";
+        $journeeQuery = "SELECT COUNT(*) FROM journee WHERE id_composante = :composante AND id_prestataire = :prestataire AND annee = :annee AND mois = :mois AND jour_du_mois = :jour_du_mois";
+        $demijourneeQuery = "SELECT COUNT(*) FROM demijournee WHERE id_composante = :composante AND id_prestataire = :prestataire AND annee = :annee AND mois = :mois AND jour_du_mois = :jour_du_mois";
+
+        try {
+            // Check if the period exists as a creneau
+            $stmt = $pdo->prepare($creneauQuery);
+            $stmt->bindValue(':composante', $periode_id_composante, PDO::PARAM_INT);
+            $stmt->bindValue(':prestataire', $periode_id_prestataire, PDO::PARAM_INT);
+            $stmt->bindValue(':annee', $periode_annee, PDO::PARAM_INT);
+            $stmt->bindValue(':mois', $periode_mois, PDO::PARAM_INT);
+            $stmt->bindValue(':jour_du_mois', $periode_jour_du_mois, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->fetchColumn() > 0) {
+                return 'Créneau';
+            }
+
+            // Check if the period exists as a journee
+            $stmt = $pdo->prepare($journeeQuery);
+            $stmt->bindValue(':composante', $periode_id_composante, PDO::PARAM_INT);
+            $stmt->bindValue(':prestataire', $periode_id_prestataire, PDO::PARAM_INT);
+            $stmt->bindValue(':annee', $periode_annee, PDO::PARAM_INT);
+            $stmt->bindValue(':mois', $periode_mois, PDO::PARAM_INT);
+            $stmt->bindValue(':jour_du_mois', $periode_jour_du_mois, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->fetchColumn() > 0) {
+                return 'Journée';
+            }
+
+            // Check if the period exists as a demijournee
+            $stmt = $pdo->prepare($demijourneeQuery);
+            $stmt->bindValue(':composante', $periode_id_composante, PDO::PARAM_INT);
+            $stmt->bindValue(':prestataire', $periode_id_prestataire, PDO::PARAM_INT);
+            $stmt->bindValue(':annee', $periode_annee, PDO::PARAM_INT);
+            $stmt->bindValue(':mois', $periode_mois, PDO::PARAM_INT);
+            $stmt->bindValue(':jour_du_mois', $periode_jour_du_mois, PDO::PARAM_INT);
+            $stmt->execute();
+            if ($stmt->fetchColumn() > 0) {
+                return 'Demi-Journée';
+            }
+
+            // If the period doesn't exist in any table, return null
+            return null;
+        } catch (PDOException $e) {
+            // Handle exceptions
+            // For simplicity, you might want to log the error and return an appropriate response
+            echo $e->getMessage();
+            return null;
+        }
     }
 
     /* -------------------------------------------------------------------------
@@ -1060,7 +1110,7 @@ INNER JOIN interlocuteur AS i ON r.id_interlocuteur = :id');
     public function getBdlsOfPrestataireByIdMission($id_composante, $id_prestataire)
     {
         $req = $this->bd->prepare(
-            "SELECT annee, mois, nom_composante 
+            "SELECT annee, mois, nom_composante,id_composante
         FROM composante JOIN
         bdl USING(id_composante) JOIN
         prestataire USING(id_prestataire) 

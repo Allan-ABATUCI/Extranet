@@ -81,28 +81,34 @@ class Controller_prestataire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_GET['annee']) && isset($_GET['mois'])) {
+        $annee = isset($_GET['annee']) ? e($_GET['annee']) : null;
+        $mois = isset($_GET['mois']) ? e($_GET['mois']) : null;
+        $composante = isset($_GET['composante']) ? e($_GET['composante']) : null;
 
-            $typeBdl = $bd->getbdltype($_GET['annee'], $_GET['mois'], $_GET['composante']);
-            if (isset($typeBdl)) {
-                if (array_key_exists('numero', $typeBdl)) {
-                    $typeBdl['type_bdl'] = 'Heure';
-                } elseif (array_key_exists('idType', $typeBdl)) {
-                    $typeBdl['type_bdl'] = 'Demi-journée';
-                } else {
-                    $typeBdl['type_bdl'] = 'Journée';
-                }
+        if ($annee && $mois) {
+            $typeBdl = $bd->getbdltype((int) $composante, (int) $_SESSION['id'], (int) $annee, (int) $mois, 0);
+            //type periode bdl= index j0 
 
-                $data_avant = $bd->getbdl(e($_GET['annee']), e($_GET['mois']), e($_GET['composante']), $_SESSION['id']);
-
-
-                $data = ['menu' => $this->action_get_navbar(), 'bdl' => $typeBdl, '$data' => $data_avant];
-                $this->render("bdl", $data);
-            } else {
-                echo 'Une erreur est survenue lors du chargement de ce bon de livraison';
+            if ($typeBdl == 'Créneau') {
+                $activites = $bd->getAllNbHeureActivite(e($_GET['annee']), e($_GET['mois']));
             }
+            if ($typeBdl == 'Demi-Journée') {
+                $activites = $bd->getAllDemiJourActivite(e($_GET['annee']), e($_GET['mois']));
+            }
+            if ($typeBdl == 'Journée') {
+                $activites = $bd->getAllJourActivite(e($_GET['annee']), e($_GET['mois']));
+            }
+
+            $data_avant = $bd->getbdl((int) $annee, (int) $mois, (int) $composante, (int) $_SESSION['id']);
+
+            $data = ['type' => $typeBdl, 'menu' => $this->action_get_navbar(), 'bdl' => $activites, '$data' => $data_avant];
+            $this->render("bdl", $data);
+        } else {
+            echo 'Une erreur est survenue lors du chargement de ce bon de livraison';
         }
     }
+
+
     /**
      * Vérifie d'avoir les informations nécessaire pour renvoyer la vue liste avec les bonnes variables pour afficher la liste des bons de livraisons du prestataire en fonction de la mission
      * @return void

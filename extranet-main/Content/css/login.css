@@ -128,7 +128,7 @@ h3 {
 .form-select {
     width: 300px;
     height: var(--height-button);
-    background: background: center/contain no-repeat url('https://cdn.discordapp.com/attachments/1181909433131999285/1196176191783186643/fond-select.PNG?ex=65b6ace4&is=65a437e4&hm=f443fdc8cdb20928fefaa78031a143fdece0cff7acc0ab722343e1378a483f5c&') #D9D9D9;
+    background: center/contain no-repeat url('https://cdn.discordapp.com/attachments/1181909433131999285/1196176191783186643/fond-select.PNG?ex=65b6ace4&is=65a437e4&hm=f443fdc8cdb20928fefaa78031a143fdece0cff7acc0ab722343e1378a483f5c&') #D9D9D9;
     border: 0px;
     border-radius: 10px;
     appearance: none;

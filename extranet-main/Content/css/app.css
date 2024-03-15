@@ -217,6 +217,7 @@ a.active {
     background-color: white;
 }
 
-block card{
-    text-align: center;
+.creneau{
+    height:var(--height-input);
+    width:var(max-content);
 }

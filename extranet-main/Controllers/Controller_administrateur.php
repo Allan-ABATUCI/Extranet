@@ -599,23 +599,21 @@ class Controller_administrateur extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_GET['annee']) && isset($_GET['annee'])) {
-            $typeBdl = $bd->getBdlType($_GET['annee'], $_GET['mois']);
-            if (array_key_exists('numero', $typeBdl)) {
-                $typeBdl['type_bdl'] = 'Heure';
-            } elseif (array_key_exists('idType', $typeBdl)) {
-                $typeBdl['type_bdl'] = 'Demi-journée';
-            } else {
-                $typeBdl['type_bdl'] = 'Journée';
-            }
+        $annee = isset($_GET['annee']) ? e($_GET['annee']) : null;
+        $mois = isset($_GET['mois']) ? e($_GET['mois']) : null;
+        $composante = isset($_GET['composante']) ? e($_GET['composante']) : null;
 
-            if ($typeBdl['type_bdl'] == 'Heure') {
+        if (isset($_GET['annee']) && isset($_GET['annee'])) {
+            $typeBdl = $bd->getBdlType((int) $composante, (int) $_GET['id-prestataire'], (int) $annee, (int) $mois, 0);
+
+
+            if ($typeBdl == 'creneau') {
                 $activites = $bd->getAllNbHeureActivite(e($_GET['annee']), e($_GET['mois']));
             }
-            if ($typeBdl['type_bdl'] == 'Demi-journée') {
+            if ($typeBdl == 'demijournee') {
                 $activites = $bd->getAllDemiJourActivite(e($_GET['annee']), e($_GET['mois']));
             }
-            if ($typeBdl['type_bdl'] == 'Journée') {
+            if ($typeBdl == 'journee') {
                 $activites = $bd->getAllJourActivite(e($_GET['annee']), e($_GET['mois']));
             }
 
