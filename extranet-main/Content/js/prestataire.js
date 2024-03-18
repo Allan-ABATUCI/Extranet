@@ -19,3 +19,4 @@ function setActiveLink(linkId) {
         console.error("Link with ID " + linkId + " not found.");
     }
 }
+

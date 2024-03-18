@@ -218,6 +218,10 @@ a.active {
 }
 
 .creneau{
-    height:var(--height-input);
-    width:var(max-content);
+    height: 4rem;
+    width:8rem;
+    padding:2rem;
+}
+.creneau label{
+    position:relative;
 }

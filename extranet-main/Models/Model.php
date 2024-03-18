@@ -596,31 +596,8 @@ WHERE c.id_composante = :id');
         return (bool) $req->rowCount();
     }
 
-    /**
-     * Méthode permettant
-     * @param $email
-     * @param $composante
-     * @param $client
-     * @return bool
-     */
-    public function assignerCommercial($email, $composante, $client)
-    {
-        $req = $this->bd->prepare("INSERT INTO estDans (id_personne, id_composante) SELECT  (SELECT p.id_personne FROM PERSONNE p WHERE p.email = :email), (SELECT c.id_composante FROM COMPOSANTE c JOIN CLIENT USING(id_client) WHERE nom_composante = :composante AND nom_client = :client)");
-        $req->bindValue(':email', $email);
-        $req->bindValue(':composante', $composante);
-        $req->bindValue(':client', $client);
-        $req->execute();
-        return (bool) $req->rowCount();
-    }
 
-    public function assignerCommercialByIdComposante($email, $id_composante)
-    {
-        $req = $this->bd->prepare("INSERT INTO estDans (id_personne, id_composante) SELECT  (SELECT p.id_personne FROM PERSONNE p WHERE p.email = :email), :id_composante");
-        $req->bindValue(':email', $email);
-        $req->bindValue(':id_composante', $id_composante, PDO::PARAM_INT);
-        $req->execute();
-        return (bool) $req->rowCount();
-    }
+
 
     public function getAllBdlPrestataire($id_pr)
     {
@@ -630,36 +607,39 @@ WHERE c.id_composante = :id');
         return $req->fetchall();
     }
     //pour créneau
-    public function getAllNbHeureActivite($annee, $mois)
+    public function getAllNbHeureActivite($annee, $mois, $composante, $id)
     {
-        $req = $this->bd->prepare("SELECT * FROM creneau JOIN bdl USING(annee,mois)WHERE annee=:annee AND mois=:mois ORDER BY annee,mois");
+        $req = $this->bd->prepare("SELECT * FROM creneau WHERE annee=:annee AND mois=:mois AND id_prestataire=$id AND id_composante= :composante ORDER BY annee,mois");
         $req->bindValue(':annee', $annee, PDO::PARAM_INT);
         $req->bindValue(':mois', $mois, PDO::PARAM_INT);
+        $req->bindValue(':composante', $composante, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getAllDemiJourActivite($annee, $mois)
+    public function getAllDemiJourActivite($annee, $mois, $composante, $id)
     {
-        $req = $this->bd->prepare("SELECT * FROM demijournee WHERE annee = :annee AND mois=:mois ORDER BY jour_du_mois");
+        $req = $this->bd->prepare("SELECT * FROM demijournee WHERE annee = :annee AND mois=:mois AND id_prestataire=$id and id_composante= :composante ORDER BY jour_du_mois");
         $req->bindValue(':annee', $annee, PDO::PARAM_INT);
         $req->bindValue(':mois', $mois, PDO::PARAM_INT);
+        $req->bindValue(':composante', $composante, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
 
-    public function getAllJourActivite($annee, $mois)
+    public function getAllJourActivite($annee, $mois, $composante, $id)
     {
-        $req = $this->bd->prepare("SELECT * FROM journee WHERE annee = :annee AND mois=:mois ORDER BY jour_du_mois");
+        $req = $this->bd->prepare("SELECT * FROM journee WHERE annee = :annee AND mois=:mois AND id_prestataire=$id and id_composante = :composante ORDER BY jour_du_mois");
         $req->bindValue(':annee', $annee, PDO::PARAM_INT);
         $req->bindValue(':mois', $mois, PDO::PARAM_INT);
+        $req->bindValue(':composante', $composante, PDO::PARAM_INT);
         $req->execute();
         return $req->fetchall(PDO::FETCH_ASSOC);
     }
 
     public function setEstValideBdlint($annee, $mois, $id_interlocuteur, $valide)
     {
-        $req = $this->bd->prepare("UPDATE bdl SET signature_interlocuteur = :valide, id_interlocuteur = :id_interlocuteur WHERE annee=:annee AND mois=:mois ");
+        $req = $this->bd->prepare("UPDATE bdl SET signature_interlocuteur = :valide, id_interlocuteur = :id_interlocuteur WHERE annee=:annee AND mois=:mois");
         $req->bindValue(':id_interlocuteur', $id_interlocuteur, PDO::PARAM_INT);
         $req->bindValue(':annee', $annee, PDO::PARAM_INT);
         $req->bindValue(':mois', $mois, PDO::PARAM_INT);
@@ -1130,7 +1110,7 @@ FROM bdl
 WHERE annee = :annee
   AND mois = :mois
   AND id_composante = :composante
-  AND id_prestataire = :id;
+  AND id_prestataire = :id
 ');
         $req->bindValue(':annee', $annee, PDO::PARAM_INT);
         $req->bindValue(':mois', $mois, PDO::PARAM_INT);

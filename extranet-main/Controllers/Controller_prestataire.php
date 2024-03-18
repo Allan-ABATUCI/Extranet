@@ -90,13 +90,13 @@ class Controller_prestataire extends Controller
             //type periode bdl= index j0 
 
             if ($typeBdl == 'Créneau') {
-                $activites = $bd->getAllNbHeureActivite(e($_GET['annee']), e($_GET['mois']));
+                $activites = $bd->getAllNbHeureActivite($annee, $mois, $composante, $_SESSION['id']);
             }
             if ($typeBdl == 'Demi-Journée') {
-                $activites = $bd->getAllDemiJourActivite(e($_GET['annee']), e($_GET['mois']));
+                $activites = $bd->getAllDemiJourActivite($annee, $mois, $composante, $_SESSION['id']);
             }
             if ($typeBdl == 'Journée') {
-                $activites = $bd->getAllJourActivite(e($_GET['annee']), e($_GET['mois']));
+                $activites = $bd->getAllJourActivite($annee, $mois, $composante, $_SESSION['id']);
             }
 
             $data_avant = $bd->getbdl((int) $annee, (int) $mois, (int) $composante, (int) $_SESSION['id']);
@@ -121,7 +121,7 @@ class Controller_prestataire extends Controller
         }
         if (isset($_GET['id'])) {
             $buttonLink = '?controller=prestataire&action=ajout_bdl_form';
-            $cardLink = '?controller=prestataire&action=afficher_bdl&composante=' . e($_GET['id']);
+            $cardLink = '?controller=prestataire&action=afficher_bdl';
             $data = [
                 'title' => 'Bon de livraison de la composante' . e($_GET['nom']),
                 'buttonLink' => $buttonLink,
