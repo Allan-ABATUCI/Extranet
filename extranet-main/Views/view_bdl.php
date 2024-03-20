@@ -1,31 +1,31 @@
 <?php
 require 'view_begin.php';
-require 'view_header.php'; ?>
+require 'view_header.php';
+?>
 
-<form action="">
+<form action="" method="post">
     <?php
     if ($type == 'Créneau') {
         echo "
-            <div class='creneau'>
+            <div class='creneau-inp'>
                 <label for='heure_arrivee'>Heure de début:</label>
-                <input type='time' name='heure_arrivee'>
+                <input type='time' name='heure_arrivee[]'> 
                 <label for='heure_depart'>Heure de fin:</label>
-                <input type='time' name='heure_depart'>
+                <input type='time' name='heure_depart[]'> 
             </div>";
     }
     ?>
-
     <div class="bdl-container">
         <div class="bdl__table">
             <table class="bdl-table">
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th>heures supplémentaires</th>
                         <th>
                             <?= $type ?>
                         </th>
-                        <th>Sélectionner</th>
+                        <th>heures supplémentaires</th>
+                        <?php echo ($type == "Créneau") ? '<th>Sélectionner</th>' : ''; ?>
                     </tr>
                 </thead>
                 <tbody id="joursTableBody">
@@ -51,18 +51,17 @@ require 'view_header.php'; ?>
                         // Formate la date en français et l'affiche dans la colonne de date
                         echo '<td class="date">' . $formatter->format($date->getTimestamp()) . '</td>';
 
+                        // Input fields for heure_arrivee and heure_depart
+                    
+
                         if ($type == 'Créneau') {
-                            if (isset($data['heure_arrivee']) && isset($data['heure_depart'])) {
-                                echo '<td></td>'; // Cellule vide pour les heures supplémentaires
-                                echo '<td class="creneau">' . $data['heure_arrivee'] . " - " . $data['heure_depart'] . '</td>';
-                            } else {
-                                echo '<td></td>'; // Cellule vide pour les heures supplémentaires
-                                echo '<td class="creneau"></td>'; // Cellule vide pour 'Créneau'
-                                echo '<td><input type="checkbox" class="checkbox"></td>'; // Colonne pour la case à cocher
-                            }
+                            echo '<td class = "time"><input type="time" name="heure_arrivee[' . $i . ']"><input type="time" name="heure_depart[' . $i . ']"></td>';
+                            echo '<td><input type="time" name="heures_supp[' . $i . ']"></td>';
+                            echo '<td><input type="checkbox" class="checkbox" data-original-heure-arrivee="' . $i . '" data-original-heure-depart="' . $i . '"></td>';
                         } else {
-                            echo '<td></td>'; // Cellule vide pour la valeur 'Créneau' si le type n'est pas 'Créneau'
-                            echo '<td></td>'; // Cellule vide pour les heures supplémentaires si le type n'est pas 'Créneau'
+                            //Si les deux sont cochés insert dans journee sinon demi-journée
+                            echo '<td><input type="checkbox" name="presence_matin[' . $i . ']"> Matin <input type="checkbox" name="presence_apres_midi[' . $i . ']"> Après-midi </td>';
+                            echo '<td><input type="time" name="heures_supp[' . $i . ']"></td>';
                         }
 
                         echo '</tr>';
@@ -75,6 +74,8 @@ require 'view_header.php'; ?>
     </div>
 </form>
 
-<script src="Content/js/table.js"></script>
+<script src="Content/js/table.js">
+
+</script>
 
 <?php require 'view_end.php'; ?>

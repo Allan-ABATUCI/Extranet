@@ -110,6 +110,7 @@ CREATE TABLE periode (
    annee SMALLINT,
    mois SMALLINT,
    jour_du_mois SMALLINT,
+   heures_sup smallint,
    PRIMARY KEY (id_composante, id_prestataire, annee, mois, jour_du_mois),
    FOREIGN KEY (id_composante, id_prestataire, annee, mois) REFERENCES bdl(id_composante, id_prestataire, annee, mois)
 );
@@ -123,6 +124,7 @@ CREATE TABLE creneau (
    annee SMALLINT NOT NULL,
    mois SMALLINT NOT NULL,
    jour_du_mois SMALLINT NOT NULL,
+   heures_sup smallint,
    FOREIGN KEY (id_composante, id_prestataire, annee, mois, jour_du_mois) REFERENCES periode(id_composante, id_prestataire, annee, mois, jour_du_mois)
 );
 
@@ -132,6 +134,7 @@ CREATE TABLE journee (
    annee SMALLINT,
    mois SMALLINT,
    jour_du_mois SMALLINT,
+   heures_sup smallint,
    PRIMARY KEY (id_composante, id_prestataire, annee, mois, jour_du_mois),
    FOREIGN KEY (id_composante, id_prestataire, annee, mois, jour_du_mois) REFERENCES periode(id_composante, id_prestataire, annee, mois, jour_du_mois)
 );
@@ -143,6 +146,7 @@ CREATE TABLE demijournee (
    annee SMALLINT NOT NULL,
    mois SMALLINT NOT NULL,
    jour_du_mois SMALLINT NOT NULL,
+   heures_sup smallint,
    PRIMARY KEY (id_type, id_composante, id_prestataire, annee, mois, jour_du_mois),
    FOREIGN KEY (id_type) REFERENCES type(id_type),
    FOREIGN KEY (id_composante, id_prestataire, annee, mois, jour_du_mois) REFERENCES periode(id_composante, id_prestataire, annee, mois, jour_du_mois)

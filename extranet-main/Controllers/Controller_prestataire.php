@@ -91,12 +91,9 @@ class Controller_prestataire extends Controller
 
             if ($typeBdl == 'Créneau') {
                 $activites = $bd->getAllNbHeureActivite($annee, $mois, $composante, $_SESSION['id']);
-            }
-            if ($typeBdl == 'Demi-Journée') {
-                $activites = $bd->getAllDemiJourActivite($annee, $mois, $composante, $_SESSION['id']);
-            }
-            if ($typeBdl == 'Journée') {
-                $activites = $bd->getAllJourActivite($annee, $mois, $composante, $_SESSION['id']);
+            } else {
+                $activites['demijournee'] = $bd->getAllDemiJourActivite($annee, $mois, $composante, $_SESSION['id']);
+                $activites['journee'] = $bd->getAllJourActivite($annee, $mois, $composante, $_SESSION['id']);
             }
 
             $data_avant = $bd->getbdl((int) $annee, (int) $mois, (int) $composante, (int) $_SESSION['id']);
@@ -196,9 +193,28 @@ class Controller_prestataire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if ($_POST['mission'] && $_POST['mois'] && $_POST['composante']) {
-            $bd->addBdlInMission(e($_POST['mission']), e($_POST['composante']), e($_POST['mois']), $_SESSION['id']);
+        // Assign sanitized $_POST values
+        $idComposante = isset($_POST['composante']) ? $_POST['composante'] : '';
+        $annee = isset($_POST['annee']) ? $_POST['annee'] : '';
+        $mois = isset($_POST['mois']) ? $_POST['mois'] : '';
+        $idPrestataire = isset($_POST['idPrestataire']) ? $_POST['idPrestataire'] : '';
+
+        // Check if any of the sanitized values are empty
+        if ($idComposante !== '' && $annee !== '' && $mois !== '' && $idPrestataire !== '') {
+            // Call the addBdl function
+            $result = $bd->addbdl($idComposante, $annee, $mois, $idPrestataire);
+
+            // Output result
+            if ($result) {
+                echo "BDL added successfully.";
+            } else {
+                echo "Failed to add BDL.";
+            }
+        } else {
+            // Handling if any required $_POST values are missing
+            echo "Please provide all required values.";
         }
         $this->action_ajout_bdl_form();
+
     }
 }

@@ -432,6 +432,82 @@ WHERE c.id_composante = :id');
         $req->execute();
         return (bool) $req->rowCount();
     }
+    /**
+     * Insère une période dans la base de données.
+     *
+     * @param int $idComposante L'ID de la composante associée à la période.
+     * @param int $idPrestataire L'ID du prestataire associé à la période.
+     * @param int $annee L'année de la période.
+     * @param int $mois Le mois de la période.
+     * @param int $jourDuMois Le jour du mois de la période.
+     * @param int $heuresSup Les heures supplémentaires de la période.
+     * @param PDO $bdd La connexion PDO à la base de données.
+     * @return bool Indique si l'insertion de la période a réussi (true) ou échoué (false).
+     */
+    function addperiode($idComposante, $idPrestataire, $annee, $mois, $jourDuMois)
+    {
+        $sql = "INSERT INTO periode (id_composante, id_prestataire, annee, mois, jour_du_mois) VALUES (:id_composante, :id_prestataire, :annee, :mois, :jour_du_mois)";
+        $stmt = $this->bd->prepare($sql);
+        $stmt->bindParam(':id_composante', $idComposante, PDO::PARAM_INT);
+        $stmt->bindParam(':id_prestataire', $idPrestataire, PDO::PARAM_INT);
+        $stmt->bindParam(':annee', $annee, PDO::PARAM_INT);
+        $stmt->bindParam(':mois', $mois, PDO::PARAM_INT);
+        $stmt->bindParam(':jour_du_mois', $jourDuMois, PDO::PARAM_INT);
+        $stmt->execute();
+        return (bool) $stmt->rowCount();
+    }
+    /**
+     * Ajoute un créneau à la base de données.
+     *
+     * @param int $idComposante L'ID de la composante associée au créneau.
+     * @param int $idPrestataire L'ID du prestataire associé au créneau.
+     * @param int $annee L'année du créneau.
+     * @param int $mois Le mois du créneau.
+     * @param int $jourDuMois Le jour du mois du créneau.
+     * @param string $heureArrivee L'heure d'arrivée du créneau.
+     * @param string $heureDepart L'heure de départ du créneau.
+     * @param int $heuresSup Les heures supplémentaires du créneau.
+     * @param PDO $bdd La connexion PDO à la base de données.
+     * @return bool Indique si l'ajout du créneau a réussi (true) ou échoué (false).
+     */
+    function addCreneau($idComposante, $idPrestataire, $annee, $mois, $jourDuMois, $heureArrivee, $heureDepart)
+    {
+        $sql = "INSERT INTO creneau (id_composante, id_prestataire, annee, mois, jour_du_mois, heure_arrivee, heure_depart) VALUES (:id_composante, :id_prestataire, :annee, :mois, :jour_du_mois, :heure_arrivee, :heure_depart)";
+        $stmt = $this->bd->prepare($sql);
+        $stmt->bindParam(':id_composante', $idComposante, PDO::PARAM_INT);
+        $stmt->bindParam(':id_prestataire', $idPrestataire, PDO::PARAM_INT);
+        $stmt->bindParam(':annee', $annee, PDO::PARAM_INT);
+        $stmt->bindParam(':mois', $mois, PDO::PARAM_INT);
+        $stmt->bindParam(':jour_du_mois', $jourDuMois, PDO::PARAM_INT);
+        $stmt->bindParam(':heure_arrivee', $heureArrivee);
+        $stmt->bindParam(':heure_depart', $heureDepart);
+        $stmt->execute();
+        return (bool) $stmt->rowCount();
+    }
+
+    /**
+     * Ajoute une journée à la base de données.
+     *
+     * @param int $idComposante L'ID de la composante associée à la journée.
+     * @param int $idPrestataire L'ID du prestataire associé à la journée.
+     * @param int $annee L'année de la journée.
+     * @param int $mois Le mois de la journée.
+     * @param int $jourDuMois Le jour du mois de la journée.
+     * @return bool Indique si l'ajout de la journée a réussi (true) ou échoué (false).
+     */
+    function addJournee($idComposante, $idPrestataire, $annee, $mois, $jourDuMois)
+    {
+        $sql = "INSERT INTO journee (id_composante, id_prestataire, annee, mois, jour_du_mois) VALUES (:id_composante, :id_prestataire, :annee, :mois, :jour_du_mois)";
+        $stmt = $this->bd->prepare($sql);
+        $stmt->bindParam(':id_composante', $idComposante, PDO::PARAM_INT);
+        $stmt->bindParam(':id_prestataire', $idPrestataire, PDO::PARAM_INT);
+        $stmt->bindParam(':annee', $annee, PDO::PARAM_INT);
+        $stmt->bindParam(':mois', $mois, PDO::PARAM_INT);
+        $stmt->bindParam(':jour_du_mois', $jourDuMois, PDO::PARAM_INT);
+        $stmt->execute();
+        return (bool) $stmt->rowCount();
+    }
+
 
     /**
      * Méthode permettant d'ajouter une composante en ajoutant les informations de son adresse dans la table adresse puis les informations de la composante dans la table composante
@@ -459,25 +535,26 @@ WHERE c.id_composante = :id');
     }
 
     /**
-     * Méthode permettant d'ajouter une mission avec ses informations et les identifiants de la composante et de la société auxquelles elle est liée
-     * @param $type
-     * @param $nom
-     * @param $date
-     * @param $nom_compo
-     * @param $nom_client
-     * @return bool
+     * Ajoute un Bon de Livraison (BDL) à la base de données avec les informations fournies.
+     *
+     * @param int $idComposante L'ID de la composante associée au BDL.
+     * @param int $annee L'année du BDL.
+     * @param int $mois Le mois du BDL.
+     * @param int $idPrestataire L'ID du prestataire associé au BDL.
+     * @return bool Indique si l'ajout du BDL a réussi (true) ou échoué (false).
      */
-    public function addMission($type, $nom, $date, $nom_compo, $nom_client)
+    public function addBdl($idComposante, $annee, $mois, $idPrestataire)
     {
-        $req = $this->bd->prepare("INSERT INTO MISSION (type_bdl, nom_mission, date_debut, id_composante) SELECT :type, :nom, :date, (SELECT id_composante FROM COMPOSANTE JOIN CLIENT USING(id_client) WHERE LOWER(nom_client) = LOWER(:nom_client) and LOWER(nom_composante) = LOWER(:nom_composante))");
-        $req->bindValue(':nom', $nom);
-        $req->bindValue(':type', $type);
-        $req->bindValue(':date', $date);
-        $req->bindValue(':nom_composante', $nom_compo);
-        $req->bindValue(':nom_client', $nom_client);
+        $req = $this->bd->prepare("INSERT INTO bdl (id_composante, annee, mois, id_prestataire) VALUES (:id_composante, :annee, :mois, :id_prestataire)");
+        $req->bindParam(':annee', $annee, PDO::PARAM_INT);
+        $req->bindParam(':mois', $mois, PDO::PARAM_INT);
+        $req->bindParam(':id_prestataire', $idPrestataire, PDO::PARAM_INT);
+        $req->bindParam(':id_composante', $idComposante, PDO::PARAM_INT);
         $req->execute();
         return (bool) $req->rowCount();
     }
+
+
 
     /**
      * Méthode permettant d'ajouter une activité en fonction de si il s'agit d'un bon de livraison de type Heure
@@ -502,27 +579,30 @@ WHERE c.id_composante = :id');
         return (bool) $req->rowCount();
     }
 
+
     /**
-     * Méthode permettant d'ajouter une activité en fonction de si il s'agit d'un bon de livraison de type Demi-Journée
-     * @param $commentaire
-     * @param $id_bdl
-     * @param $id_personne
-     * @param $date_bdl
-     * @param $nb_dj
-     * @return bool
+     * Ajoute une demi-journée à la base de données.
+     *
+     * @param int $idType L'ID du type de demi-journée.
+     * @param int $idComposante L'ID de la composante associée à la demi-journée.
+     * @param int $idPrestataire L'ID du prestataire associé à la demi-journée.
+     * @param int $annee L'année de la demi-journée.
+     * @param int $mois Le mois de la demi-journée.
+     * @param int $jourDuMois Le jour du mois de la demi-journée.
+     * @return bool Indique si l'ajout de la demi-journée a réussi (true) ou échoué (false).
      */
-    public function addDemiJournee($commentaire, $id_bdl, $id_personne, $date_bdl, $nb_dj)
+    function addDemiJournee($idType, $idComposante, $idPrestataire, $annee, $mois, $jourDuMois, $heuresSup)
     {
-        $req = $this->bd->prepare("INSERT INTO ACTIVITE (commentaire, id_bdl, id_personne, date_bdl) VALUES(:commentaire, :id_bdl, :id_personne, :date_bdl)");
-        $req->bindValue(':commentaire', $commentaire);
-        $req->bindValue(':id_bdl', $id_bdl, PDO::PARAM_INT);
-        $req->bindValue(':id_personne', $id_personne, PDO::PARAM_INT);
-        $req->bindValue(':date_bdl', $date_bdl);
-        $req->execute();
-        $req = $this->bd->prepare("INSERT INTO DEMI_JOUR SELECT (SELECT id_activite FROM activite ORDER BY id_activite DESC LIMIT 1), :nb_dj");
-        $req->bindValue(':nb_dj', $nb_dj);
-        $req->execute();
-        return (bool) $req->rowCount();
+        $sql = "INSERT INTO demijournee (id_type, id_composante, id_prestataire, annee, mois, jour_du_mois) VALUES (:id_type, :id_composante, :id_prestataire, :annee, :mois, :jour_du_mois)";
+        $stmt = $this->bd->prepare($sql);
+        $stmt->bindParam(':id_type', $idType, PDO::PARAM_INT);
+        $stmt->bindParam(':id_composante', $idComposante, PDO::PARAM_INT);
+        $stmt->bindParam(':id_prestataire', $idPrestataire, PDO::PARAM_INT);
+        $stmt->bindParam(':annee', $annee, PDO::PARAM_INT);
+        $stmt->bindParam(':mois', $mois, PDO::PARAM_INT);
+        $stmt->bindParam(':jour_du_mois', $jourDuMois, PDO::PARAM_INT);
+        $stmt->execute();
+        return (bool) $stmt->rowCount();
     }
 
     /**
@@ -769,14 +849,6 @@ WHERE c.id_composante = :id');
         return (bool) $req->rowCount();
     }
 
-    public function setCommentaireActivite($id, $commentaire)
-    {
-        $req = $this->bd->prepare("UPDATE ACTIVITE SET commentaire = :commentaire WHERE id_activite = :id");
-        $req->bindValue(':id', $id, PDO::PARAM_INT);
-        $req->bindValue(':commentaire', $commentaire, PDO::PARAM_STR);
-        $req->execute();
-        return (bool) $req->rowCount();
-    }
 
     public function setDateBdlActivite($annee, $mois, $date)
     {
