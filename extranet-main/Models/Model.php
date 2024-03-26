@@ -440,8 +440,6 @@ WHERE c.id_composante = :id');
      * @param int $annee L'année de la période.
      * @param int $mois Le mois de la période.
      * @param int $jourDuMois Le jour du mois de la période.
-     * @param int $heuresSup Les heures supplémentaires de la période.
-     * @param PDO $bdd La connexion PDO à la base de données.
      * @return bool Indique si l'insertion de la période a réussi (true) ou échoué (false).
      */
     function addperiode($idComposante, $idPrestataire, $annee, $mois, $jourDuMois)
@@ -466,8 +464,6 @@ WHERE c.id_composante = :id');
      * @param int $jourDuMois Le jour du mois du créneau.
      * @param string $heureArrivee L'heure d'arrivée du créneau.
      * @param string $heureDepart L'heure de départ du créneau.
-     * @param int $heuresSup Les heures supplémentaires du créneau.
-     * @param PDO $bdd La connexion PDO à la base de données.
      * @return bool Indique si l'ajout du créneau a réussi (true) ou échoué (false).
      */
     function addCreneau($idComposante, $idPrestataire, $annee, $mois, $jourDuMois, $heureArrivee, $heureDepart)
@@ -543,7 +539,7 @@ WHERE c.id_composante = :id');
      * @param int $idPrestataire L'ID du prestataire associé au BDL.
      * @return bool Indique si l'ajout du BDL a réussi (true) ou échoué (false).
      */
-    public function addBdl($idComposante, $annee, $mois, $idPrestataire)
+    public function addbdl($idComposante, $annee, $mois, $idPrestataire)
     {
         $req = $this->bd->prepare("INSERT INTO bdl (id_composante, annee, mois, id_prestataire) VALUES (:id_composante, :annee, :mois, :id_prestataire)");
         $req->bindParam(':annee', $annee, PDO::PARAM_INT);

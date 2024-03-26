@@ -19,12 +19,12 @@ class Controller_prestataire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_SESSION['role'])) {
+        if (isset ($_SESSION['role'])) {
             unset($_SESSION['role']);
         }
         $_SESSION['role'] = 'prestataire';
 
-        if (isset($_SESSION['id'])) {
+        if (isset ($_SESSION['id'])) {
             $bd = Model::getModel();
             $bdlLink = '?controller=prestataire&action=composante_bdl';
             $headerDashboard = ['Société', 'Composante', 'Bon de livraison'];
@@ -81,29 +81,46 @@ class Controller_prestataire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        $annee = isset($_GET['annee']) ? e($_GET['annee']) : null;
-        $mois = isset($_GET['mois']) ? e($_GET['mois']) : null;
-        $composante = isset($_GET['composante']) ? e($_GET['composante']) : null;
+        $annee = isset ($_GET['annee']) ? e($_GET['annee']) : null;
+        $mois = isset ($_GET['mois']) ? e($_GET['mois']) : null;
+        $composante = isset ($_GET['composante']) ? e($_GET['composante']) : null;
 
         if ($annee && $mois) {
             $typeBdl = $bd->getbdltype((int) $composante, (int) $_SESSION['id'], (int) $annee, (int) $mois, 0);
             //type periode bdl= index j0 
 
             if ($typeBdl == 'Créneau') {
+
                 $activites = $bd->getAllNbHeureActivite($annee, $mois, $composante, $_SESSION['id']);
+
+            } elseif ($typeBdl == 'Journée') {
+
+                $activites = $bd->getAllJourActivite($annee, $mois, $composante, $_SESSION['id']);
+
             } else {
-                $activites['demijournee'] = $bd->getAllDemiJourActivite($annee, $mois, $composante, $_SESSION['id']);
-                $activites['journee'] = $bd->getAllJourActivite($annee, $mois, $composante, $_SESSION['id']);
+
+                $activites = $bd->getAllDemiJourActivite($annee, $mois, $composante, $_SESSION['id']);
+
             }
 
             $data_avant = $bd->getbdl((int) $annee, (int) $mois, (int) $composante, (int) $_SESSION['id']);
 
-            $data = ['type' => $typeBdl, 'menu' => $this->action_get_navbar(), 'bdl' => $activites, '$data' => $data_avant];
+            // Vérifier le rôle de session
+            $inputReadOnly = ($_SESSION['role'] != "prestataire") ? "readonly" : "";
+
+            $data = [
+                'type' => $typeBdl,
+                'menu' => $this->action_get_navbar(),
+                'bdl' => $activites,
+                'data' => $data_avant,
+                'inputReadOnly' => $inputReadOnly // Passer la variable pour le rendu
+            ];
             $this->render("bdl", $data);
         } else {
             echo 'Une erreur est survenue lors du chargement de ce bon de livraison';
         }
     }
+
 
 
     /**
@@ -116,7 +133,7 @@ class Controller_prestataire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_GET['id'])) {
+        if (isset ($_GET['id'])) {
             $buttonLink = '?controller=prestataire&action=ajout_bdl_form';
             $cardLink = '?controller=prestataire&action=afficher_bdl';
             $data = [
@@ -140,7 +157,7 @@ class Controller_prestataire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_SESSION['id'])) {
+        if (isset ($_SESSION['id'])) {
             $cardLink = '?controller=prestataire&action=afficher_bdl';
             $buttonLink = '?controller=prestataire&action=ajout_bdl_form';
             $data = [
@@ -155,7 +172,7 @@ class Controller_prestataire extends Controller
     }
 
     /**
-     * Vérifie d'avoir les informations nécessaires pour créer un bon de livraison
+     * Vérifie d'avoir les informations nécessaires avant de créer un bon de livraison
      * @return void
      */
     public function action_prestataire_creer_bdl()
@@ -164,8 +181,13 @@ class Controller_prestataire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_SESSION['id']) && isset($_POST['mission'])) {
-            $bd->addBdlForPrestataire($_SESSION['id'], e($_POST['mission']));
+        $idComposante = isset ($_POST['composante']) ? $_POST['composante'] : '';
+        $annee = isset ($_POST['annee']) ? $_POST['annee'] : '';
+        $mois = isset ($_POST['mois']) ? $_POST['mois'] : '';
+        $idPrestataire = $_SESSION['id'];
+
+        if ($idComposante !== '' && $annee !== '' && $mois !== '' && $idPrestataire !== '') {
+            $bd->addbdl($idComposante, $annee, $mois, $idPrestataire);
         } else {
             echo 'Une erreur est survenue lors de la création du bon de livraison';
         }
@@ -193,19 +215,22 @@ class Controller_prestataire extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        // Assign sanitized $_POST values
-        $idComposante = isset($_POST['composante']) ? $_POST['composante'] : '';
-        $annee = isset($_POST['annee']) ? $_POST['annee'] : '';
-        $mois = isset($_POST['mois']) ? $_POST['mois'] : '';
-        $idPrestataire = isset($_POST['idPrestataire']) ? $_POST['idPrestataire'] : '';
+        $idComposante = isset ($_POST['composante']) ? $_POST['composante'] : '';
+        $annee = isset ($_POST['annee']) ? $_POST['annee'] : '';
+        $mois = isset ($_POST['mois']) ? $_POST['mois'] : '';
+        $idPrestataire = $_SESSION['id'];
+        $jour = 0;
 
-        // Check if any of the sanitized values are empty
+
         if ($idComposante !== '' && $annee !== '' && $mois !== '' && $idPrestataire !== '') {
-            // Call the addBdl function
             $result = $bd->addbdl($idComposante, $annee, $mois, $idPrestataire);
+
 
             // Output result
             if ($result) {
+                $bd->addperiode($idComposante, $idPrestataire, $annee, $mois, $jour);
+
+
                 echo "BDL added successfully.";
             } else {
                 echo "Failed to add BDL.";

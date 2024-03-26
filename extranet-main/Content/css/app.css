@@ -237,3 +237,7 @@
     .time{
         display:flex;
     }
+
+    .center{
+        margin:auto;
+    }
