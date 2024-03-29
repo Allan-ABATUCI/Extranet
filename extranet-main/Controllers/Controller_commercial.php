@@ -53,7 +53,7 @@ class Controller_commercial extends Controller
             session_start();
         }
         if (isset($_GET['id']) && isset($_GET['id-prestataire'])) {
-            $cardLink = '?controller=commercial&action=consulter_bdl';
+            $cardLink = '?controller=commercial&action=consulter_bdl&id-prestataire=' . e($_GET['id-prestataire']);
             $data = ['title' => 'Bons de livraison', 'cardLink' => $cardLink, 'menu' => $this->action_get_navbar(), 'person' => $bd->getBdlsOfPrestataireByIdMission(e($_GET['id']), e($_GET['id-prestataire']))];
             $this->render('liste', $data);
         }
@@ -110,32 +110,46 @@ class Controller_commercial extends Controller
         if (session_status() == PHP_SESSION_NONE) {
             session_start();
         }
-        if (isset($_GET['id'])) {
-            $typeBdl = $bd->getBdlType(e($_GET['annee']), e($_GET['mois']));
+        $annee = isset($_GET['annee']) ? e($_GET['annee']) : null;
+        $mois = isset($_GET['mois']) ? e($_GET['mois']) : null;
+        $composante = isset($_GET['composante']) ? e($_GET['composante']) : null;
 
-            if (array_key_exists('numero', $typeBdl)) {
-                $typeBdl['type_bdl'] = 'Heure';
-            } elseif (array_key_exists('idType', $typeBdl)) {
-                $typeBdl['type_bdl'] = 'Demi-journée';
+        if ($annee && $mois) {
+            $typeBdl = $bd->getbdltype((int) $composante, (int) e($_GET['id-prestataire']), (int) $annee, (int) $mois, 0);
+            //type periode bdl= index j0 
+
+            if ($typeBdl == 'Créneau') {
+
+                $activites = $bd->getAllNbHeureActivite($annee, $mois, $composante, e($_GET['id-prestataire']));
+
+            } elseif ($typeBdl == 'Journée') {
+
+                $activites = $bd->getAllJourActivite($annee, $mois, $composante, e($_GET['id-prestataire']));
+
             } else {
-                $typeBdl['type_bdl'] = 'Journée';
+
+                $activites = $bd->getAllDemiJourActivite($annee, $mois, $composante, e($_GET['id-prestataire']));
+
             }
 
-            if ($typeBdl['type_bdl'] == 'Heure') {
-                $activites = $bd->getAllNbHeureActivite(e($_GET['annee']), e($_GET['mois']));
-            }
-            if ($typeBdl['type_bdl'] == 'Demi-journée') {
-                $activites = $bd->getAllDemiJourActivite(e($_GET['annee']), e($_GET['mois']));
-            }
-            if ($typeBdl['type_bdl'] == 'Journée') {
-                $activites = $bd->getAllJourActivite(e($_GET['annee']), e($_GET['mois']));
-            }
+            $data_avant = $bd->getbdl((int) $annee, (int) $mois, (int) $composante, (int) e($_GET['id-prestataire']));
 
-            $data = ['menu' => $this->action_get_navbar(), 'bdl' => $typeBdl, 'activites' => $activites];
-            $this->render("consulte_bdl", $data);
+            // Vérifier le rôle de session
+            $inputReadOnly = ($_SESSION['role'] != "prestataire") ? "readonly" : "";
+
+            $data = [
+                'type' => $typeBdl,
+                'menu' => $this->action_get_navbar(),
+                'bdl' => $activites,
+                'data' => $data_avant,
+                'inputReadOnly' => $inputReadOnly // Passer la variable pour le rendu
+            ];
+            $this->render("bdl", $data);
         } else {
             echo 'Une erreur est survenue lors du chargement de ce bon de livraison';
         }
+        echo 'Une erreur est survenue lors du chargement de ce bon de livraison';
+
     }
 
     /**

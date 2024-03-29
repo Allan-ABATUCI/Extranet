@@ -20,9 +20,9 @@ if ($type == 'Créneau') {
         echo "
             <div class='creneau-inp'>
                 <label for='heure_arrivee'>Heure de début:</label>
-                <input type='time' name='heure_arrivee[]' value='" . (isset ($data['heure_arrivee']) ? $data['heure_arrivee'] : '') . "' $inputReadOnly> 
+                <input type='time' name='heure_arrivee[]' value='" . (isset($data['heure_arrivee']) ? $data['heure_arrivee'] : '') . "' $inputReadOnly> 
                 <label for='heure_depart'>Heure de fin:</label>
-                <input type='time' name='heure_depart[]' value='" . (isset ($data['heure_depart']) ? $data['heure_depart'] : '') . "' $inputReadOnly> 
+                <input type='time' name='heure_depart[]' value='" . (isset($data['heure_depart']) ? $data['heure_depart'] : '') . "' $inputReadOnly> 
             </div>";
     }
 }
@@ -72,12 +72,14 @@ if ($type == 'Créneau') {
 
                     if ($type == 'Créneau') {
                         // Affiche les champs de saisie pour heure_arrivee et heure_depart si le rôle est "prestataire"
-                        echo '<td class = "time"><inplut type="time" name="heure_arrivee[' . $i . ']" value="' . (isset ($data['heure_arrivee'][$i]) ? $data['heure_arrivee'][$i] : '') . '" ' . $inputReadOnly . '><input type="time" name="heure_depart[' . $i . ']" value="' . (isset ($data['heure_depart'][$i]) ? $data['heure_depart'][$i] : '') . '" ' . $inputReadOnly . '></td>';
+                        echo '<td class = "time"><input type="time" name="heure_arrivee[' . $i . ']" value="' . (isset($data['heure_arrivee'][$i]) ? $data['heure_arrivee'][$i] : '') . '" ' . $inputReadOnly . '><input type="time" name="heure_depart[' . $i . ']" value="' . (isset($data['heure_depart'][$i]) ? $data['heure_depart'][$i] : '') . '" ' . $inputReadOnly . '></td>';
                         // Affiche la case à cocher de sélection si le rôle est "prestataire"
                         if ($_SESSION['role'] == "prestataire") {
-                            echo '<td><input type="time" name="heures_supp[' . $i . ']" value="' . (isset ($data['heures_supp'][$i]) ? $data['heures_supp'][$i] : '') . '" ' . $inputReadOnly . '></td>';
+                            echo '<td><input type="time" name="heures_supp[' . $i . ']" value="' . (isset($data['heures_supp'][$i]) ? $data['heures_supp'][$i] : '') . '" ' . $inputReadOnly . '></td>';
                             echo '<td><input type="checkbox" class="checkbox" data-original-heure-arrivee="' . $i . '" data-original-heure-depart="' . $i . '"></td>';
-                        } elseif ($type == 'Journée') {
+                        } elseif ($_SESSION['role'] !== 'prestataire') {
+                            echo '<td><input type="time" name="heures_supp[' . $i . ']" value="' . (isset($data['heures_supp'][$i]) ? $data['heures_supp'][$i] : '') . '" ' . $inputReadOnly . '></td>';
+
 
                         }
                     } else {
@@ -85,7 +87,7 @@ if ($type == 'Créneau') {
                         if ($_SESSION['role'] == "prestataire") {
                             echo '<td><input type="checkbox" name="presence_matin[' . $i . ']"> Matin <input type="checkbox" name="presence_apres_midi[' . $i . ']"> Après-midi </td>';
                         }
-                        echo '<td><input type="time" name="heures_supp[' . $i . ']" value="' . (isset ($data['heures_supp'][$i]) ? $data['heures_supp'][$i] : '') . '" ' . $inputReadOnly . '></td>';
+                        echo '<td><input type="time" name="heures_supp[' . $i . ']" value="' . (isset($data['heures_supp'][$i]) ? $data['heures_supp'][$i] : '') . '" ' . $inputReadOnly . '></td>';
                     }
 
                     echo '</tr>';
